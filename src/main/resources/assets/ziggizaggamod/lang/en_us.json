@@ -1,7 +1,9 @@
 {
-  "creativetab.ziggizagga.ziggizaggatab": "Ziggi Zagga Mod",
+  "creativetab.ziggizagga_tab": "Ziggi Zagga Mod",
   "item.ziggizaggamod.tenkaichimedallion" : "Tenkaichi's Medallion",
   "item.ziggizaggamod.sanmaglasses": "Sanma's Glasses",
+  "item.ziggizaggamod.miguelstache": "Miguel's Stache",
+  "item.ziggizaggamod.dfeogreencard": "Dfeo's Green Card",
   "item.ziggizaggamod.ziggizite" : "Ziggizite",
   "item.ziggizaggamod.zaggazite" : "Zaggazite",
   "item.ziggizaggamod.ziggizite_nugget" : "Ziggizite Nugget",
@@ -19,5 +21,6 @@
   "item.ziggizaggamod.zaggazite_axe": "Zaggazite Axe",
   "item.ziggizaggamod.zaggazite_pickaxe": "Zaggazite Pickaxe",
   "item.ziggizaggamod.zaggazite_shovel": "Zaggazite Shovel",
-  "item.ziggizaggamod.zaggazite_hoe": "Zaggazite Hoe"
+  "item.ziggizaggamod.zaggazite_hoe": "Zaggazite Hoe",
+  "effect.ziggizaggamod.spiderman": "Spiderman"
 }

@@ -21,6 +21,8 @@ public class ModCreativeModeTabs {
                             .displayItems((itemDisplayParameters, output) -> {
                                 output.accept(ModItems.TENKAICHI_MEDALLION.get());
                                 output.accept(ModItems.SANMA_GLASSES.get());
+                                output.accept(ModItems.MIGUEL_STACHE.get());
+                                output.accept(ModItems.DFEO_GREEN_CARD.get());
                                 output.accept(ModItems.ZAGGAZITE_NUGGET.get());
                                 output.accept(ModItems.ZIGGIZITE_NUGGET.get());
                                 output.accept(ModItems.ZAGGAZITE.get());

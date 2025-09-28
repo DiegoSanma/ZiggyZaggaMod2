@@ -22,7 +22,9 @@ public class ModItemTagProvider extends ItemTagsProvider {
     protected void addTags(HolderLookup.Provider pProvider) {
         tag(ModTags.Items.HEROES_ITEM)
                 .add(ModItems.TENKAICHI_MEDALLION.get())
-                .add(ModItems.SANMA_GLASSES.get());
+                .add(ModItems.SANMA_GLASSES.get())
+                .add(ModItems.MIGUEL_STACHE.get())
+                .add(ModItems.DFEO_GREEN_CARD.get());
 
     }
 }

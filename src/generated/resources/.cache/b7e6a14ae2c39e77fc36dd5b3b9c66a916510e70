@@ -1,8 +1,10 @@
-// 1.21.4	2025-09-28T10:34:08.8694809	Model Definitions - ziggizaggamod
+// 1.21.4	2025-09-28T11:34:28.0694376	Model Definitions - ziggizaggamod
 a96740b1b6cf12152656541b44ea9324c0f59842 assets/ziggizaggamod/blockstates/zaggazite_deepslate_ore.json
 3eab0b368ab6be27238c9f91af2d1d03debc217f assets/ziggizaggamod/blockstates/zaggazite_ore.json
 4919d6d4aeccf50d6a9da2bbaaca54164578f20a assets/ziggizaggamod/blockstates/ziggizite_deepslate_ore.json
 db3a50213a858299c26d383a01deba3bbd564594 assets/ziggizaggamod/blockstates/ziggizite_ore.json
+b5117f5cc2a75360868ecf4305c070b57025839a assets/ziggizaggamod/items/dfeogreencard.json
+1508ef9690aa5f2ca025b71b3d74cc1ef8aef72d assets/ziggizaggamod/items/miguelstache.json
 9688e0e16b4ca283e632269bb7002a9ee9529738 assets/ziggizaggamod/items/sanmaglasses.json
 6f63d7483a6f41415329c103602ce0e98b195846 assets/ziggizaggamod/items/tenkaichimedallion.json
 f76e43ad8f16725359ff4f1d44c7f474cd37c974 assets/ziggizaggamod/items/zaggazite.json
@@ -26,6 +28,8 @@ a9aa7e62e6b1144e5731f4854d6fec740e4678e8 assets/ziggizaggamod/items/ziggizite_pi
 76273a2a382687a5926dad9e6d524c8a3a2a7eb1 assets/ziggizaggamod/models/block/zaggazite_ore.json
 be5a2abb1ac8cf33f437ace3a13dc73d90a6c0e7 assets/ziggizaggamod/models/block/ziggizite_deepslate_ore.json
 2ff3ed8ac91741d11e9d66a07e57a2cf4b0c04a1 assets/ziggizaggamod/models/block/ziggizite_ore.json
+f50eb8fc04398f4665154a8ad0dc92b0c4e36c72 assets/ziggizaggamod/models/item/dfeogreencard.json
+f4f49e57aa9483934f8c35c5588d3811e44ae5fe assets/ziggizaggamod/models/item/miguelstache.json
 00e47f142410bd5504a3863d0658aa3cb3404afd assets/ziggizaggamod/models/item/sanmaglasses.json
 0eb5e7c3659ab8f91b87e59ac5938d9a3eb23909 assets/ziggizaggamod/models/item/tenkaichimedallion.json
 69ea2a56e157bed698108c71656350679de4d68d assets/ziggizaggamod/models/item/zaggazite.json

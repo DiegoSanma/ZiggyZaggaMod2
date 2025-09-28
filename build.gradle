@@ -22,6 +22,7 @@ repositories {
         name = "Illusive Soulworks maven"
         url = "https://maven.theillusivec4.top/"
     }
+
 }
 
 base {

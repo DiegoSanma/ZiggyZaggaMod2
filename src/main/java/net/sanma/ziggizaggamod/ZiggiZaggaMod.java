@@ -2,6 +2,7 @@ package net.sanma.ziggizaggamod;
 
 import net.sanma.ziggizaggamod.block.ModBlocks;
 import net.sanma.ziggizaggamod.capability.HeroItem;
+import net.sanma.ziggizaggamod.effect.ModEffects;
 import net.sanma.ziggizaggamod.items.ModCreativeModeTabs;
 import net.sanma.ziggizaggamod.items.ModItems;
 import org.slf4j.Logger;
@@ -61,6 +62,8 @@ public class ZiggiZaggaMod {
         ModBlocks.register(modEventBus);
         // Register the item to a creative tab
         modEventBus.addListener(this::addCreative);
+
+        ModEffects.register(modEventBus);
 
         // Register our mod's ModConfigSpec so that FML can create and load the config file for us
         modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
