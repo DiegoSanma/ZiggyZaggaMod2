@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "ziggizaggamod:ziggizite"
+  ],
+  "result": {
+    "count": 9,
+    "id": "ziggizaggamod:ziggizite_nugget"
+  }
+}

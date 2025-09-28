@@ -1,0 +1,5 @@
+// 1.21.4	2025-09-28T00:07:38.6681649	Tags for minecraft:block mod id ziggizaggamod
+b96e46cadd2ed7de62c188d428973b3c660b9a64 data/minecraft/tags/block/mineable/pickaxe.json
+b96e46cadd2ed7de62c188d428973b3c660b9a64 data/minecraft/tags/block/needs_diamond_tool.json
+a249c46329a41538f49a564e1f14338aaf1be5a0 data/ziggizaggamod/tags/block/needs_zaggazite_tool.json
+a249c46329a41538f49a564e1f14338aaf1be5a0 data/ziggizaggamod/tags/block/needs_ziggizite_tool.json

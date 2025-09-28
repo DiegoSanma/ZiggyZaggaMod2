@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "ziggizaggamod:zaggazite"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    },
+    "has_zaggazite_nugget": {
+      "conditions": {
+        "items": [
+          {
+            "items": "ziggizaggamod:zaggazite_nugget"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_zaggazite_nugget"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "ziggizaggamod:zaggazite"
+    ]
+  }
+}

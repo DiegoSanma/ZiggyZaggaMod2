@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "A": "ziggizaggamod:zaggazite",
+    "B": "minecraft:stick"
+  },
+  "pattern": [
+    "AA",
+    "AB",
+    " B"
+  ],
+  "result": {
+    "count": 1,
+    "id": "ziggizaggamod:zaggazite_axe"
+  }
+}
