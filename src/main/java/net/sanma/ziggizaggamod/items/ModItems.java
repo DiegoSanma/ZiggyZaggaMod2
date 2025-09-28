@@ -6,6 +6,8 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.sanma.ziggizaggamod.ZiggiZaggaMod;
+import net.sanma.ziggizaggamod.capability.SanmaItem;
+import net.sanma.ziggizaggamod.capability.TenkaichiItem;
 
 import javax.swing.plaf.basic.BasicComboBoxUI;
 
@@ -15,7 +17,9 @@ public class ModItems {
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(ZiggiZaggaMod.MODID);
 
     public static final DeferredItem<Item> TENKAICHI_MEDALLION =
-            ITEMS.registerItem("tenkaichimedallion",Item::new,new Item.Properties());
+            ITEMS.registerItem("tenkaichimedallion", TenkaichiItem::new,new Item.Properties());
+    public static final DeferredItem<Item> SANMA_GLASSES =
+            ITEMS.registerItem("sanmaglasses", SanmaItem::new,new Item.Properties());
     public static final DeferredItem<Item> ZIGGIZITE_NUGGET =
             ITEMS.registerItem("ziggizite_nugget",Item::new,new Item.Properties());
     public static final DeferredItem<Item> ZIGGIZITE =

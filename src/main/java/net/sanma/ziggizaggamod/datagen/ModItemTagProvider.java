@@ -6,6 +6,8 @@ import net.minecraft.data.tags.ItemTagsProvider;
 import net.minecraft.data.tags.VanillaItemTagsProvider;
 import net.minecraft.world.level.block.Block;
 import net.sanma.ziggizaggamod.ZiggiZaggaMod;
+import net.sanma.ziggizaggamod.items.ModItems;
+import net.sanma.ziggizaggamod.util.ModTags;
 
 import javax.annotation.Nullable;
 import java.util.concurrent.CompletableFuture;
@@ -18,6 +20,9 @@ public class ModItemTagProvider extends ItemTagsProvider {
 
     @Override
     protected void addTags(HolderLookup.Provider pProvider) {
+        tag(ModTags.Items.HEROES_ITEM)
+                .add(ModItems.TENKAICHI_MEDALLION.get())
+                .add(ModItems.SANMA_GLASSES.get());
 
     }
 }

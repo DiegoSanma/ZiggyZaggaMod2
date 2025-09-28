@@ -25,6 +25,7 @@ public class ModTags {
             public static final TagKey<Item> ZIGGIZITE_TOOL_MATERIALS = createTag("ziggizite_tool_materials");
             public static final TagKey<Item> ZAGGAZITE_TOOL_MATERIALS = createTag("zaggazite_tool_materials");
 
+            public static final TagKey<Item> HEROES_ITEM = createTag("heroes_item");
             private static TagKey<Item> createTag(String id) {
                 return ItemTags.create(ResourceLocation.fromNamespaceAndPath(ZiggiZaggaMod.MODID, id));
             }

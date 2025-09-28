@@ -1,6 +1,7 @@
 package net.sanma.ziggizaggamod;
 
 import net.sanma.ziggizaggamod.block.ModBlocks;
+import net.sanma.ziggizaggamod.capability.HeroItem;
 import net.sanma.ziggizaggamod.items.ModCreativeModeTabs;
 import net.sanma.ziggizaggamod.items.ModItems;
 import org.slf4j.Logger;
@@ -33,6 +34,7 @@ import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
+import top.theillusivec4.curios.api.CuriosApi;
 
 // The value here should match an entry in the META-INF/neoforge.mods.toml file
 @Mod(ZiggiZaggaMod.MODID)
@@ -65,6 +67,8 @@ public class ZiggiZaggaMod {
     }
 
     private void commonSetup(FMLCommonSetupEvent event) {
+        //HeroItem.register(ModItems.TENKAICHI_MEDALLION.get());
+        HeroItem.registerPredicate();
     }
 
     // Add the example block item to the building blocks tab

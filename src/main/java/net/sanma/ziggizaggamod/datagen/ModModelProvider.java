@@ -50,6 +50,7 @@ public class ModModelProvider extends ModelProvider {
     protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerators itemModels) {
 
         itemModels.generateFlatItem(ModItems.TENKAICHI_MEDALLION.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(ModItems.SANMA_GLASSES.get(), ModelTemplates.FLAT_ITEM);
         itemModels.generateFlatItem(ModItems.ZAGGAZITE.get(), ModelTemplates.FLAT_ITEM);
         itemModels.generateFlatItem(ModItems.ZIGGIZITE.get(), ModelTemplates.FLAT_ITEM);
         itemModels.generateFlatItem(ModItems.ZAGGAZITE_NUGGET.get(), ModelTemplates.FLAT_ITEM);

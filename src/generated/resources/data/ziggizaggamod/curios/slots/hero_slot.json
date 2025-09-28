@@ -1,0 +1,6 @@
+{
+  "icon": "ziggizaggamod:slot/hero_slot",
+  "validators": [
+    "ziggizaggamod:hero_validator"
+  ]
+}

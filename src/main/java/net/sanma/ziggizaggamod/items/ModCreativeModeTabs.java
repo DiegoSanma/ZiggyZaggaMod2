@@ -15,11 +15,12 @@ public class ModCreativeModeTabs {
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, ZiggiZaggaMod.MODID);
 
     public static final Supplier<CreativeModeTab> ZiggiZaggaTab =
-            CREATIVE_MODE_TABS.register("ziggyzagga_tab",
+            CREATIVE_MODE_TABS.register("ziggizagga_tab",
                     () -> CreativeModeTab.builder().icon(() -> new ItemStack(ModItems.TENKAICHI_MEDALLION.get()))
-                            .title(Component.translatable("creativetab.ziggyzagga_tab"))
+                            .title(Component.translatable("creativetab.ziggizagga_tab"))
                             .displayItems((itemDisplayParameters, output) -> {
                                 output.accept(ModItems.TENKAICHI_MEDALLION.get());
+                                output.accept(ModItems.SANMA_GLASSES.get());
                                 output.accept(ModItems.ZAGGAZITE_NUGGET.get());
                                 output.accept(ModItems.ZIGGIZITE_NUGGET.get());
                                 output.accept(ModItems.ZAGGAZITE.get());

@@ -64,8 +64,8 @@ public class DataGenerators {
                 new ModModelProvider(output)
         );
 
-        //gen.addProvider(event.includeClient(),
-        //        new CuriosSlotProvider(ZiggiZaggaMod.MODID,output,lookupProvider));
+        gen.addProvider(true,
+                new CuriosSlotProvider(ZiggiZaggaMod.MODID,output,lookupProvider));
     }
     @SubscribeEvent
     public static void gatherServerData(GatherDataEvent.Server event) {
@@ -113,8 +113,8 @@ public class DataGenerators {
                 new ModModelProvider(output)
         );
 
-        //gen.addProvider(event.includeClient(),
-        //        new CuriosSlotProvider(ZiggiZaggaMod.MODID,output,lookupProvider));
+        gen.addProvider(true,
+                new CuriosSlotProvider(ZiggiZaggaMod.MODID,output,lookupProvider));
     }
 }
 
