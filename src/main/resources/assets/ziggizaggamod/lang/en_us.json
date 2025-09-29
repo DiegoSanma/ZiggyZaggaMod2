@@ -8,6 +8,16 @@
   "item.ziggizaggamod.donvitomanjarate": "Donvito's Manjarate",
   "item.ziggizaggamod.yonyebread": "Yonye's Bread",
   "item.ziggizaggamod.pepaskull": "Pepa's Skull",
+  "tooltip.ziggizaggamod.heroitem.tooltip": "Press §eShift§r for more Information",
+  "tooltip.ziggizaggamod.tenkaichi.tooltip": "Gamble your experience and gain extra health!",
+  "tooltip.ziggizaggamod.sanma.tooltip": "Gain nightvision and lose a couple centimeters!",
+  "tooltip.ziggizaggamod.miguel.tooltip": "The true embodiment of 'La Suerte Ziggi Zagga'",
+  "tooltip.ziggizaggamod.dfeo.tooltip": "You might start feeling like a certain superhero...",
+  "tooltip.ziggizaggamod.gabo.tooltip": "Don't even try poison, this liver has already seen it all",
+  "tooltip.ziggizaggamod.donvito.tooltip": "No need to eat when you have a delicious manjarate with you",
+  "tooltip.ziggizaggamod.yonye.tooltip": "Gain insane amounts of strength, but your belly will never be full",
+  "tooltip.ziggizaggamod.pepa.tooltip": "Wait, you were here the whole time?",
+
   "item.ziggizaggamod.ziggizite" : "Ziggizite",
   "item.ziggizaggamod.zaggazite" : "Zaggazite",
   "item.ziggizaggamod.ziggizite_nugget" : "Ziggizite Nugget",
@@ -26,5 +36,7 @@
   "item.ziggizaggamod.zaggazite_pickaxe": "Zaggazite Pickaxe",
   "item.ziggizaggamod.zaggazite_shovel": "Zaggazite Shovel",
   "item.ziggizaggamod.zaggazite_hoe": "Zaggazite Hoe",
-  "effect.ziggizaggamod.spiderman": "Spiderman"
+
+  "effect.ziggizaggamod.spiderman": "Spiderman",
+  "curios.identifier.hero_slot": "Hero Slot"
 }

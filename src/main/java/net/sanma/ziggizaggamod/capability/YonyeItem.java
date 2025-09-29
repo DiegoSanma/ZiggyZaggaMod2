@@ -1,12 +1,17 @@
 package net.sanma.ziggizaggamod.capability;
 
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import top.theillusivec4.curios.api.SlotContext;
+
+import java.util.List;
 
 public class YonyeItem extends HeroItem{
 
@@ -37,5 +42,13 @@ public class YonyeItem extends HeroItem{
         entity.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(2);
 
         entity.removeEffect(MobEffects.HUNGER);
+    }
+    @Override
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+        if(Screen.hasShiftDown()){
+            tooltipComponents.add(Component.translatable("tooltip.ziggizaggamod.yonye.tooltip"));
+        }else {
+            tooltipComponents.add(Component.translatable("tooltip.ziggizaggamod.heroitem.tooltip"));
+        }
     }
 }
