@@ -16,13 +16,13 @@ public class ModCreativeModeTabs {
 
     public static final Supplier<CreativeModeTab> ZiggiZaggaTab =
             CREATIVE_MODE_TABS.register("ziggizagga_tab",
-                    () -> CreativeModeTab.builder().icon(() -> new ItemStack(ModItems.TENKAICHI_MEDALLION.get()))
+                    () -> CreativeModeTab.builder().icon(() -> new ItemStack(ModItems.TENKAICHI_DOG_TAG.get()))
                             .title(Component.translatable("creativetab.ziggizagga_tab"))
                             .displayItems((itemDisplayParameters, output) -> {
-                                output.accept(ModItems.TENKAICHI_MEDALLION.get());
+                                output.accept(ModItems.TENKAICHI_DOG_TAG.get());
                                 output.accept(ModItems.SANMA_GLASSES.get());
                                 output.accept(ModItems.MIGUEL_STACHE.get());
-                                output.accept(ModItems.DFEO_GREEN_CARD.get());
+                                output.accept(ModItems.DFEO_VBUCK.get());
                                 output.accept(ModItems.GABO_LIVER.get());
                                 output.accept(ModItems.PEPA_SKULL.get());
                                 output.accept(ModItems.YONYE_BREAD.get());

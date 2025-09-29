@@ -77,7 +77,6 @@ public class ZiggiZaggaMod {
     // Add the example block item to the building blocks tab
     private void addCreative(BuildCreativeModeTabContentsEvent event) {
         if (event.getTabKey() == CreativeModeTabs.BUILDING_BLOCKS) {
-            event.accept(ModItems.TENKAICHI_MEDALLION);
             event.accept(ModItems.ZAGGAZITE_NUGGET);
             event.accept(ModItems.ZIGGIZITE_NUGGET);
             event.accept(ModItems.ZAGGAZITE);

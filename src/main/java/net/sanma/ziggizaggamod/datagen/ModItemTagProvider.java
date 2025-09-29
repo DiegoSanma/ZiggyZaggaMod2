@@ -21,10 +21,10 @@ public class ModItemTagProvider extends ItemTagsProvider {
     @Override
     protected void addTags(HolderLookup.Provider pProvider) {
         tag(ModTags.Items.HEROES_ITEM)
-                .add(ModItems.TENKAICHI_MEDALLION.get())
+                .add(ModItems.TENKAICHI_DOG_TAG.get())
                 .add(ModItems.SANMA_GLASSES.get())
                 .add(ModItems.MIGUEL_STACHE.get())
-                .add(ModItems.DFEO_GREEN_CARD.get())
+                .add(ModItems.DFEO_VBUCK.get())
                 .add(ModItems.GABO_LIVER.get())
                 .add(ModItems.DONVITO_MANJARATE.get())
                 .add(ModItems.YONYE_BREAD.get())

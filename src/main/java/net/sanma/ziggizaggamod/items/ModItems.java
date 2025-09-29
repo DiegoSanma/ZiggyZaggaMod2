@@ -15,14 +15,14 @@ public class ModItems {
     //Deffered Register for Items
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(ZiggiZaggaMod.MODID);
 
-    public static final DeferredItem<Item> TENKAICHI_MEDALLION =
-            ITEMS.registerItem("tenkaichimedallion", TenkaichiItem::new,new Item.Properties());
+    public static final DeferredItem<Item> TENKAICHI_DOG_TAG =
+            ITEMS.registerItem("tenkaichidogtag", TenkaichiItem::new,new Item.Properties());
     public static final DeferredItem<Item> SANMA_GLASSES =
             ITEMS.registerItem("sanmaglasses", SanmaItem::new,new Item.Properties());
     public static final DeferredItem<Item> MIGUEL_STACHE =
             ITEMS.registerItem("miguelstache", MiguelItem::new,new Item.Properties());
-    public static final DeferredItem<Item> DFEO_GREEN_CARD =
-            ITEMS.registerItem("dfeogreencard", DfeoItem::new,new Item.Properties());
+    public static final DeferredItem<Item> DFEO_VBUCK =
+            ITEMS.registerItem("dfeovbuck", DfeoItem::new,new Item.Properties());
     public static final DeferredItem<Item> PEPA_SKULL =
             ITEMS.registerItem("pepaskull", PepaItem::new,new Item.Properties());
     public static final DeferredItem<Item> YONYE_BREAD =
