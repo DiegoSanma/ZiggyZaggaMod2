@@ -16,7 +16,7 @@ public class MiguelItem extends HeroItem{
     public void onEquip(SlotContext slotContext, ItemStack prevStack, ItemStack stack) {
         Player player = (Player) slotContext.entity();
 
-        player.addEffect(new MobEffectInstance(MobEffects.LUCK, Integer.MAX_VALUE,5,true,false));
+        player.addEffect(new MobEffectInstance(MobEffects.LUCK, -1,5,true,false));
     }
 
     @Override

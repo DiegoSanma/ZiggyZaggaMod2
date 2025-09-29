@@ -23,6 +23,10 @@ public class ModCreativeModeTabs {
                                 output.accept(ModItems.SANMA_GLASSES.get());
                                 output.accept(ModItems.MIGUEL_STACHE.get());
                                 output.accept(ModItems.DFEO_GREEN_CARD.get());
+                                output.accept(ModItems.GABO_LIVER.get());
+                                output.accept(ModItems.PEPA_SKULL.get());
+                                output.accept(ModItems.YONYE_BREAD.get());
+                                output.accept(ModItems.DONVITO_MANJARATE.get());
                                 output.accept(ModItems.ZAGGAZITE_NUGGET.get());
                                 output.accept(ModItems.ZIGGIZITE_NUGGET.get());
                                 output.accept(ModItems.ZAGGAZITE.get());

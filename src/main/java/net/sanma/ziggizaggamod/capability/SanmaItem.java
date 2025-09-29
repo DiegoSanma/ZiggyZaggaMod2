@@ -19,7 +19,7 @@ public class SanmaItem extends HeroItem {
     public void onEquip(SlotContext slotContext, ItemStack prevStack, ItemStack stack) {
         Player player = (Player) slotContext.entity();
 
-        player.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, Integer.MAX_VALUE,0,true,false));
+        player.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, -1,0,true,false));
         player.getAttribute(Attributes.SCALE).setBaseValue(0.5);
     }
 

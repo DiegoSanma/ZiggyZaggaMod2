@@ -54,6 +54,10 @@ public class ModModelProvider extends ModelProvider {
         itemModels.generateFlatItem(ModItems.SANMA_GLASSES.get(), ModelTemplates.FLAT_ITEM);
         itemModels.generateFlatItem(ModItems.MIGUEL_STACHE.get(),ModelTemplates.FLAT_ITEM);
         itemModels.generateFlatItem(ModItems.DFEO_GREEN_CARD.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(ModItems.GABO_LIVER.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(ModItems.PEPA_SKULL.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(ModItems.YONYE_BREAD.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(ModItems.DONVITO_MANJARATE.get(), ModelTemplates.FLAT_ITEM);
         itemModels.generateFlatItem(ModItems.ZAGGAZITE.get(), ModelTemplates.FLAT_ITEM);
         itemModels.generateFlatItem(ModItems.ZIGGIZITE.get(), ModelTemplates.FLAT_ITEM);
         itemModels.generateFlatItem(ModItems.ZAGGAZITE_NUGGET.get(), ModelTemplates.FLAT_ITEM);

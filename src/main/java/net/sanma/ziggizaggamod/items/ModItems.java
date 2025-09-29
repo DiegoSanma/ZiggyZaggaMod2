@@ -6,10 +6,7 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.sanma.ziggizaggamod.ZiggiZaggaMod;
-import net.sanma.ziggizaggamod.capability.DfeoItem;
-import net.sanma.ziggizaggamod.capability.MiguelItem;
-import net.sanma.ziggizaggamod.capability.SanmaItem;
-import net.sanma.ziggizaggamod.capability.TenkaichiItem;
+import net.sanma.ziggizaggamod.capability.*;
 
 import javax.swing.plaf.basic.BasicComboBoxUI;
 
@@ -26,6 +23,14 @@ public class ModItems {
             ITEMS.registerItem("miguelstache", MiguelItem::new,new Item.Properties());
     public static final DeferredItem<Item> DFEO_GREEN_CARD =
             ITEMS.registerItem("dfeogreencard", DfeoItem::new,new Item.Properties());
+    public static final DeferredItem<Item> PEPA_SKULL =
+            ITEMS.registerItem("pepaskull", PepaItem::new,new Item.Properties());
+    public static final DeferredItem<Item> YONYE_BREAD =
+            ITEMS.registerItem("yonyebread", YonyeItem::new,new Item.Properties());
+    public static final DeferredItem<Item> GABO_LIVER =
+            ITEMS.registerItem("gaboliver", GaboItem::new,new Item.Properties());
+    public static final DeferredItem<Item> DONVITO_MANJARATE =
+            ITEMS.registerItem("donvitomanjarate", DonvitoItem::new,new Item.Properties());
     public static final DeferredItem<Item> ZIGGIZITE_NUGGET =
             ITEMS.registerItem("ziggizite_nugget",Item::new,new Item.Properties());
     public static final DeferredItem<Item> ZIGGIZITE =

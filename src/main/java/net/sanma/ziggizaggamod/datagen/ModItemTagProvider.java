@@ -24,7 +24,11 @@ public class ModItemTagProvider extends ItemTagsProvider {
                 .add(ModItems.TENKAICHI_MEDALLION.get())
                 .add(ModItems.SANMA_GLASSES.get())
                 .add(ModItems.MIGUEL_STACHE.get())
-                .add(ModItems.DFEO_GREEN_CARD.get());
+                .add(ModItems.DFEO_GREEN_CARD.get())
+                .add(ModItems.GABO_LIVER.get())
+                .add(ModItems.DONVITO_MANJARATE.get())
+                .add(ModItems.YONYE_BREAD.get())
+                .add(ModItems.PEPA_SKULL.get());
 
     }
 }

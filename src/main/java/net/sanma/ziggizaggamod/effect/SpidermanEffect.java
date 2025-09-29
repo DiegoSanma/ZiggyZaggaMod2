@@ -33,6 +33,8 @@ public class SpidermanEffect extends MobEffect {
             return true;
         }
 
+
+
         return super.applyEffectTick(level, livingEntity, amplifier);
     }
 

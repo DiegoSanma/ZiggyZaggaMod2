@@ -17,7 +17,7 @@ public class DfeoItem extends HeroItem {
     public void onEquip(SlotContext slotContext, ItemStack prevStack, ItemStack stack) {
         Player player = (Player) slotContext.entity();
 
-        player.addEffect(new MobEffectInstance(ModEffects.SPIDERMAN_EFFECT, Integer.MAX_VALUE,0,true,false));
+        player.addEffect(new MobEffectInstance(ModEffects.SPIDERMAN_EFFECT, -1,0,true,false));
     }
 
     @Override
