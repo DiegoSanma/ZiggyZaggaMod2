@@ -38,5 +38,7 @@
   "item.ziggizaggamod.zaggazite_hoe": "Zaggazite Hoe",
 
   "effect.ziggizaggamod.spiderman": "Spiderman",
-  "curios.identifier.hero_slot": "Hero Slot"
+  "curios.identifier.hero_slot": "Hero Slot",
+
+  "entity.mccourse.escobi": "Escovirus"
 }

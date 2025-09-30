@@ -7,6 +7,7 @@ import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.sanma.ziggizaggamod.ZiggiZaggaMod;
 import net.sanma.ziggizaggamod.capability.*;
+import net.sanma.ziggizaggamod.entity.ModEntity;
 
 import javax.swing.plaf.basic.BasicComboBoxUI;
 
@@ -60,6 +61,9 @@ public class ModItems {
             ITEMS.registerItem("zaggazite_shovel",(properties) -> new ShovelItem(ModToolTiers.ZAGGAZITE,1.5f,-2.8f,properties));
     public static final DeferredItem<HoeItem> ZAGGAZITE_HOE =
             ITEMS.registerItem("zaggazite_hoe",(properties) -> new HoeItem(ModToolTiers.ZAGGAZITE,0f,-3.0f,properties));
+
+    public static final DeferredItem<Item> ESCOBI_SPAWN_EGG = ITEMS.registerItem("escobi_spawn_egg",
+            (properties) -> new SpawnEggItem(ModEntity.ESCOBI.get(), properties));
     public static void register(IEventBus event){
         ITEMS.register(event);
     }

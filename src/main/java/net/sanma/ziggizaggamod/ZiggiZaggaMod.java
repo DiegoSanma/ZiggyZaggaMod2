@@ -1,8 +1,13 @@
 package net.sanma.ziggizaggamod;
 
+import net.minecraft.client.renderer.entity.EntityRenderers;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.sanma.ziggizaggamod.block.ModBlocks;
 import net.sanma.ziggizaggamod.capability.HeroItem;
 import net.sanma.ziggizaggamod.effect.ModEffects;
+import net.sanma.ziggizaggamod.entity.ModEntity;
+import net.sanma.ziggizaggamod.entity.client.EscobiRenderer;
 import net.sanma.ziggizaggamod.items.ModCreativeModeTabs;
 import net.sanma.ziggizaggamod.items.ModItems;
 import org.slf4j.Logger;
@@ -60,6 +65,8 @@ public class ZiggiZaggaMod {
 
         ModItems.register(modEventBus);
         ModBlocks.register(modEventBus);
+
+        ModEntity.register(modEventBus);
         // Register the item to a creative tab
         modEventBus.addListener(this::addCreative);
 
@@ -101,7 +108,13 @@ public class ZiggiZaggaMod {
     // You can use SubscribeEvent and let the Event Bus discover methods to call
     @SubscribeEvent
     public void onServerStarting(ServerStartingEvent event) {
-        // Do something when the server starts
-        LOGGER.info("HELLO from server starting");
+
+    }
+    @EventBusSubscriber(modid = MODID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+    public static class ClientModEvents {
+        @SubscribeEvent
+        public static void onClientSetup(FMLClientSetupEvent event) {
+            EntityRenderers.register(ModEntity.ESCOBI.get(), EscobiRenderer::new);
+        }
     }
 }
