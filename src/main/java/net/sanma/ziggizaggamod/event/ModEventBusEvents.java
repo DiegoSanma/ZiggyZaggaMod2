@@ -1,5 +1,6 @@
 package net.sanma.ziggizaggamod.event;
 
+import net.minecraft.world.entity.FlyingMob;
 import net.minecraft.world.entity.SpawnPlacementTypes;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.levelgen.Heightmap;
@@ -27,7 +28,7 @@ public class ModEventBusEvents {
 
     @SubscribeEvent
     public static void registerSpawnPlacements(RegisterSpawnPlacementsEvent event) {
-        event.register(ModEntity.ESCOBI.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
-                Monster::checkMonsterSpawnRules, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+        event.register(ModEntity.ESCOBI.get(), SpawnPlacementTypes.NO_RESTRICTIONS, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                FlyingMob::checkMobSpawnRules, RegisterSpawnPlacementsEvent.Operation.REPLACE);
     }
 }

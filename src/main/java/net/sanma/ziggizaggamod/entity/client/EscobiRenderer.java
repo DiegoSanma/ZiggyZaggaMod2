@@ -19,6 +19,13 @@ public class EscobiRenderer extends MobRenderer<EscobiEntity, EscobiRenderState,
     }
 
     @Override
+    protected void scale(EscobiRenderState renderState, PoseStack poseStack) {
+        float scale = 3.0f;
+        poseStack.scale(scale, scale, scale);
+        super.scale(renderState, poseStack);
+    }
+
+    @Override
     public void render(EscobiRenderState renderState, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
 
         super.render(renderState, poseStack, bufferSource, packedLight);
@@ -32,6 +39,8 @@ public class EscobiRenderer extends MobRenderer<EscobiEntity, EscobiRenderState,
     @Override
     public void extractRenderState(EscobiEntity entity, EscobiRenderState reusedState, float partialTick) {
         super.extractRenderState(entity, reusedState, partialTick);
+        reusedState.isAttacking = entity.isAttacking();
         reusedState.idleAnimationState.copyFrom(entity.idleAnimation);
+        reusedState.attackAnimationState.copyFrom(entity.attackAnimation);
     }
 }
