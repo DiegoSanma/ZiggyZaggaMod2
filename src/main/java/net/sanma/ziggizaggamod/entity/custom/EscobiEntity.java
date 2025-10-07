@@ -53,12 +53,10 @@ public class EscobiEntity extends FlyingMob implements  Enemy {
     protected void registerGoals() {
         this.goalSelector.addGoal(5,new RandomFloatAroundGoal(this));
         //this.goalSelector.addGoal(6, new EscobiLookGoal(this));
-        //this.goalSelector.addGoal(6,new LookAtPlayerGoal(this,Player.class,20));
+        this.goalSelector.addGoal(6,new LookAtPlayerGoal(this,Player.class,20));
         this.goalSelector.addGoal(2,new EscobiRangedAttackGoal(this));
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal(this, Player.class, true));
-
-        //this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
-        //this.targetSelector.addGoal(1, new NearestAttackableTargetGoal(this, Player.class, 10, true, false, (p_390241_, p_390242_) -> Math.abs(p_390241_.getY() - this.getY()) <= (double) 4.0F));
+        this.targetSelector.addGoal(1, new NearestAttackableTargetGoal(this, Player.class, 10, true, false, (p_390241_, p_390242_) -> Math.abs(p_390241_.getY() - this.getY()) <= (double) 4.0F));
     }
 
     public static AttributeSupplier.Builder createAttributes() {
@@ -82,7 +80,7 @@ public class EscobiEntity extends FlyingMob implements  Enemy {
             attackAnimationtimeout--;
             if(attackAnimationtimeout==0){
                 attackAnimation.stop();
-                attackAnimationtimeout=-1;
+                attackAnimationtimeout--;
             }
         }
     }
@@ -90,7 +88,7 @@ public class EscobiEntity extends FlyingMob implements  Enemy {
     private void shootFireball(double x, double y, double z) {
         // Posición de inicio: el centro del mob, un poco más arriba
         double startX = this.getX();
-        double startY = this.getY(0.5D) + 0.5D; // altura del pecho o cabeza
+        double startY = this.getY(0.5D); // altura del pecho o cabeza
         double startZ = this.getZ();
 
         // Vector hacia el target
@@ -252,7 +250,7 @@ public class EscobiEntity extends FlyingMob implements  Enemy {
             //escobi.attackAnimation.start(escobi.tickCount);
             this.escobi.setAttacking(true);
             this.targetX = this.escobi.getTarget().getX();
-            this.targetY = this.escobi.getTarget().getY();
+            this.targetY = this.escobi.getTarget().getEyeY();
             this.targetZ = this.escobi.getTarget().getZ();
             this.loadtime = 80;
         }
