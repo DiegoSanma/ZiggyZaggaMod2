@@ -29,6 +29,6 @@ public class ModEventBusEvents {
     @SubscribeEvent
     public static void registerSpawnPlacements(RegisterSpawnPlacementsEvent event) {
         event.register(ModEntity.ESCOBI.get(), SpawnPlacementTypes.NO_RESTRICTIONS, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
-                FlyingMob::checkMobSpawnRules, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+                Monster::checkMobSpawnRules, RegisterSpawnPlacementsEvent.Operation.REPLACE);
     }
 }
