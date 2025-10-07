@@ -8,6 +8,7 @@ import net.sanma.ziggizaggamod.capability.HeroItem;
 import net.sanma.ziggizaggamod.effect.ModEffects;
 import net.sanma.ziggizaggamod.entity.ModEntity;
 import net.sanma.ziggizaggamod.entity.client.EscobiRenderer;
+import net.sanma.ziggizaggamod.entity.client.JobRenderer;
 import net.sanma.ziggizaggamod.items.ModCreativeModeTabs;
 import net.sanma.ziggizaggamod.items.ModItems;
 import org.slf4j.Logger;
@@ -115,6 +116,7 @@ public class ZiggiZaggaMod {
         @SubscribeEvent
         public static void onClientSetup(FMLClientSetupEvent event) {
             EntityRenderers.register(ModEntity.ESCOBI.get(), EscobiRenderer::new);
+            EntityRenderers.register(ModEntity.JOB.get(), JobRenderer::new);
         }
     }
 }

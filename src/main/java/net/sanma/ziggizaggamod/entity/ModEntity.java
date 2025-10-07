@@ -10,6 +10,7 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.sanma.ziggizaggamod.ZiggiZaggaMod;
 import net.sanma.ziggizaggamod.entity.custom.EscobiEntity;
+import net.sanma.ziggizaggamod.entity.custom.JobEntity;
 
 import java.util.function.Supplier;
 
@@ -20,7 +21,13 @@ public class ModEntity {
     public static ResourceKey<EntityType<?>> ESCOBI_KEY = ResourceKey.create(Registries.ENTITY_TYPE, ResourceLocation.withDefaultNamespace("escobi"));
     public static final Supplier<EntityType<EscobiEntity>> ESCOBI =
             ENTITY_TYPES.register("escobi", () -> EntityType.Builder.of(EscobiEntity::new, MobCategory.MONSTER)
-                    .sized(2.5f, 2.5f).build(ESCOBI_KEY));
+                    .sized(0.5f, 2.5f).build(ESCOBI_KEY));
+
+    public static ResourceKey<EntityType<?>> JOB_KEY = ResourceKey.create(Registries.ENTITY_TYPE, ResourceLocation.withDefaultNamespace("job"));
+    public static final Supplier<EntityType<JobEntity>> JOB =
+            ENTITY_TYPES.register("job", () -> EntityType.Builder.of(JobEntity::new, MobCategory.CREATURE)
+                    .sized(0.5f, 4.0f).build(JOB_KEY));
+
 
 
     public static void register(IEventBus eventBus) {

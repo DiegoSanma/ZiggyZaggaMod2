@@ -1,38 +1,24 @@
 package net.sanma.ziggizaggamod.entity.custom;
 
-import net.minecraft.client.model.BlazeModel;
-import net.minecraft.client.model.ZombieModel;
-import net.minecraft.client.renderer.entity.BlazeRenderer;
-import net.minecraft.client.renderer.entity.ZombieRenderer;
-import net.minecraft.core.BlockPos;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.AnimationState;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.FlyingMob;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.FlyingMoveControl;
 import net.minecraft.world.entity.ai.control.MoveControl;
 import net.minecraft.world.entity.ai.goal.*;
-import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.monster.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.*;
-import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import javax.annotation.Nullable;
 import java.util.EnumSet;
 
 public class EscobiEntity extends FlyingMob implements  Enemy {
@@ -45,14 +31,12 @@ public class EscobiEntity extends FlyingMob implements  Enemy {
 
     public EscobiEntity(EntityType<? extends FlyingMob> entityType, Level level) {
         super(entityType, level);
-        //this.moveControl = new EscobiEntityMoveControl(this);
         this.moveControl = new FlyingMoveControl(this,60,true);
     }
 
     @Override
     protected void registerGoals() {
         this.goalSelector.addGoal(5,new RandomFloatAroundGoal(this));
-        //this.goalSelector.addGoal(6, new EscobiLookGoal(this));
         this.goalSelector.addGoal(6,new LookAtPlayerGoal(this,Player.class,20));
         this.goalSelector.addGoal(2,new EscobiRangedAttackGoal(this));
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal(this, Player.class, true));
@@ -129,11 +113,10 @@ public class EscobiEntity extends FlyingMob implements  Enemy {
     @Override
     public void tick() {
         super.tick();
-        //this.setAggressive(this.getTarget() != null);
         if (this.level().isClientSide) {
             setAnimationState();
         }
-  }
+    }
 
 
 
@@ -191,43 +174,6 @@ public class EscobiEntity extends FlyingMob implements  Enemy {
         }
     }
 
-    static class EscobiEntityMoveControl extends MoveControl {
-        private final EscobiEntity escobi;
-        private int floatDuration;
-
-        public EscobiEntityMoveControl(EscobiEntity escobi) {
-            super(escobi);
-            this.escobi = escobi;
-        }
-
-        public void tick() {
-            if (this.operation == Operation.MOVE_TO && this.floatDuration-- <= 0) {
-                this.floatDuration = this.floatDuration + this.escobi.getRandom().nextInt(5) + 2;
-                Vec3 vec3 = new Vec3(this.wantedX - this.escobi.getX(), this.wantedY - this.escobi.getY(), this.wantedZ - this.escobi.getZ());
-                double d0 = vec3.length();
-                vec3 = vec3.normalize();
-                if (this.canReach(vec3, Mth.ceil(d0))) {
-                    this.escobi.setDeltaMovement(this.escobi.getDeltaMovement().add(vec3.scale(0.3)));
-                } else {
-                    this.operation = Operation.WAIT;
-                }
-            }
-
-        }
-
-        private boolean canReach(Vec3 pos, int length) {
-            AABB aabb = this.escobi.getBoundingBox();
-
-            for(int i = 1; i < length; ++i) {
-                aabb = aabb.move(pos);
-                if (!this.escobi.level().noCollision(this.escobi, aabb)) {
-                    return false;
-                }
-            }
-
-            return true;
-        }
-    }
 
     static class EscobiRangedAttackGoal extends Goal{
 
