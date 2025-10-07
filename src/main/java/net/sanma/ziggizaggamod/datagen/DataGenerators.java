@@ -44,6 +44,7 @@ public class DataGenerators {
         gen.addProvider(true,
                 new ModRecipeDataProvider(output, lookupProvider)
         );
+        gen.addProvider(true, new ModDatapackProvider(output, lookupProvider));
 
         // --------------------
         // Block tags
@@ -106,6 +107,7 @@ public class DataGenerators {
         gen.addProvider(true,
                 new ModItemTagProvider(output, lookupProvider, blockTagsProvider.contentsGetter())
         );
+        gen.addProvider(true, new ModDatapackProvider(output, lookupProvider));
         // --------------------
         // Models (client-side)
         // --------------------

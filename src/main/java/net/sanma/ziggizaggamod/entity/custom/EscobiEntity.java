@@ -39,6 +39,7 @@ public class EscobiEntity extends FlyingMob implements  Enemy {
     public static final AnimationState idleAnimation = new AnimationState();
     public static final AnimationState attackAnimation = new AnimationState();
     private int idleAnimationTimeout = 0;
+    private int attackAnimationtimeout = -1;
     private static final EntityDataAccessor<Boolean> ATTACKING =
             SynchedEntityData.defineId(EscobiEntity.class, EntityDataSerializers.BOOLEAN);
 
@@ -72,6 +73,17 @@ public class EscobiEntity extends FlyingMob implements  Enemy {
             this.idleAnimation.start(this.tickCount);
         } else {
             this.idleAnimationTimeout = this.idleAnimationTimeout - 1;
+        }
+        if(this.isAttacking() && attackAnimationtimeout==-1){
+            this.attackAnimationtimeout = 80;
+            this.attackAnimation.start(this.tickCount);
+        }
+        if(attackAnimationtimeout>0){
+            attackAnimationtimeout--;
+            if(attackAnimationtimeout==0){
+                attackAnimation.stop();
+                attackAnimationtimeout=-1;
+            }
         }
     }
 
@@ -123,7 +135,7 @@ public class EscobiEntity extends FlyingMob implements  Enemy {
         if (this.level().isClientSide) {
             setAnimationState();
         }
-    }
+  }
 
 
 
@@ -237,7 +249,7 @@ public class EscobiEntity extends FlyingMob implements  Enemy {
 
         @Override
         public void start() {
-            escobi.attackAnimation.start(escobi.tickCount);
+            //escobi.attackAnimation.start(escobi.tickCount);
             this.escobi.setAttacking(true);
             this.targetX = this.escobi.getTarget().getX();
             this.targetY = this.escobi.getTarget().getY();
@@ -254,7 +266,7 @@ public class EscobiEntity extends FlyingMob implements  Enemy {
         public void stop() {
             this.escobi.setAttacking(false);
             this.loadtime=0;
-            escobi.attackAnimation.stop();
+            this.hasShot = false;
             super.stop();
         }
 
@@ -264,14 +276,12 @@ public class EscobiEntity extends FlyingMob implements  Enemy {
             if (livingentity != null) {
                 loadtime--;
                 if(loadtime >45) {
-                    System.out.println("MiroFijo");
                     this.escobi.getLookControl().setLookAt(this.targetX, this.targetY, this.targetZ);
                 } else if ((loadtime==45)) {
                     escobi.shootFireball(this.targetX,this.targetY,this.targetZ);
                     this.hasShot = true;
                 }
                 if(this.hasShot){
-                    System.out.println("Trying to look");
                     this.escobi.getLookControl().setLookAt(livingentity,60.0F,60.0F);
                     if(loadtime<=0) {
                         this.hasShot = false;

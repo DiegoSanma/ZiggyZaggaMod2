@@ -19,7 +19,7 @@ public class ModEntity {
 
     public static ResourceKey<EntityType<?>> ESCOBI_KEY = ResourceKey.create(Registries.ENTITY_TYPE, ResourceLocation.withDefaultNamespace("escobi"));
     public static final Supplier<EntityType<EscobiEntity>> ESCOBI =
-            ENTITY_TYPES.register("gecko", () -> EntityType.Builder.of(EscobiEntity::new, MobCategory.MONSTER)
+            ENTITY_TYPES.register("escobi", () -> EntityType.Builder.of(EscobiEntity::new, MobCategory.MONSTER)
                     .sized(0.75f, 2.5f).build(ESCOBI_KEY));
 
 
