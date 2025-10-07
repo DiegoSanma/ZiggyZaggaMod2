@@ -272,7 +272,7 @@ public class EscobiEntity extends FlyingMob implements  Enemy {
                 }
                 if(this.hasShot){
                     System.out.println("Trying to look");
-                    this.escobi.getLookControl().setLookAt(livingentity,30.0F,30.0F);
+                    this.escobi.getLookControl().setLookAt(livingentity,60.0F,60.0F);
                     if(loadtime<=0) {
                         this.hasShot = false;
                         loadtime = 80;
