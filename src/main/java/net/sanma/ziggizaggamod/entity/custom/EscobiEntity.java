@@ -1,6 +1,8 @@
 package net.sanma.ziggizaggamod.entity.custom;
 
+import net.minecraft.client.model.BlazeModel;
 import net.minecraft.client.model.ZombieModel;
+import net.minecraft.client.renderer.entity.BlazeRenderer;
 import net.minecraft.client.renderer.entity.ZombieRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -33,12 +35,10 @@ import net.minecraft.world.phys.Vec3;
 import javax.annotation.Nullable;
 import java.util.EnumSet;
 
-public class EscobiEntity extends FlyingMob implements  RangedAttackMob {
+public class EscobiEntity extends FlyingMob implements  Enemy {
     public static final AnimationState idleAnimation = new AnimationState();
     public static final AnimationState attackAnimation = new AnimationState();
     private int idleAnimationTimeout = 0;
-    private int attackAnimationTimeout = 0;
-    private int explosionPower = 5;
     private static final EntityDataAccessor<Boolean> ATTACKING =
             SynchedEntityData.defineId(EscobiEntity.class, EntityDataSerializers.BOOLEAN);
 
@@ -51,14 +51,14 @@ public class EscobiEntity extends FlyingMob implements  RangedAttackMob {
     @Override
     protected void registerGoals() {
         this.goalSelector.addGoal(5,new RandomFloatAroundGoal(this));
-        this.goalSelector.addGoal(6, new EscobiLookGoal(this));
-        this.goalSelector.addGoal(2,new EscobiRangedAttackGoal(this, 1.0D, 20, 10.0F));
+        //this.goalSelector.addGoal(6, new EscobiLookGoal(this));
+        //this.goalSelector.addGoal(6,new LookAtPlayerGoal(this,Player.class,20));
+        this.goalSelector.addGoal(2,new EscobiRangedAttackGoal(this));
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal(this, Player.class, true));
 
         //this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
         //this.targetSelector.addGoal(1, new NearestAttackableTargetGoal(this, Player.class, 10, true, false, (p_390241_, p_390242_) -> Math.abs(p_390241_.getY() - this.getY()) <= (double) 4.0F));
     }
-
 
     public static AttributeSupplier.Builder createAttributes() {
         return Monster.createMonsterAttributes()
@@ -73,18 +73,36 @@ public class EscobiEntity extends FlyingMob implements  RangedAttackMob {
         } else {
             this.idleAnimationTimeout = this.idleAnimationTimeout - 1;
         }
-        if(this.isAttacking() && attackAnimationTimeout <= 0){
-            this.attackAnimationTimeout = 80;
-            this.attackAnimation.start(this.tickCount);
-        }
-        else{
-            --this.attackAnimationTimeout;
-        }
-        if(!(this.isAttacking())){
-            this.attackAnimation.stop();
-        }
     }
 
+    private void shootFireball(double x, double y, double z) {
+        // Posición de inicio: el centro del mob, un poco más arriba
+        double startX = this.getX();
+        double startY = this.getY(0.5D) + 0.5D; // altura del pecho o cabeza
+        double startZ = this.getZ();
+
+        // Vector hacia el target
+        double dx = x - startX;
+        double dy = y - startY;
+        double dz = z - startZ;
+
+        // Crea el vector dirección normalizado
+        Vec3 direction = new Vec3(dx, dy, dz).normalize();
+
+
+        // Crear fireball (puedes usar SmallFireball o LargeFireball)
+        SmallFireball fireball = new SmallFireball(
+                this.level(),
+                this,
+                direction// Shooter// Dirección de movimiento
+        );
+
+        fireball.setPos(startX, startY, startZ); // posición inicial del disparo
+
+
+        // Agregar la entidad al mundo
+        this.level().addFreshEntity(fireball);
+    }
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder p_326499_) {
         super.defineSynchedData(p_326499_);
@@ -101,35 +119,13 @@ public class EscobiEntity extends FlyingMob implements  RangedAttackMob {
     @Override
     public void tick() {
         super.tick();
-        this.setAggressive(this.getTarget() != null);
+        //this.setAggressive(this.getTarget() != null);
         if (this.level().isClientSide) {
             setAnimationState();
         }
     }
 
 
-    @Override
-    public void performRangedAttack(LivingEntity target, float distanceFactor) {
-        double dX = target.getX() - this.getX();
-        double dY = target.getY(0.5D) - (this.getY(0.5D));
-        double dZ = target.getZ() - this.getZ();
-
-        // crea la bola de fuego
-        LargeFireball fireball = new LargeFireball(
-                this.level(),
-                this,             // owner
-                new Vec3(dX, dY, dZ),       // dirección
-                1                 // explosion power (1 = blaze, 3 = escobi)
-        );
-
-        fireball.setPos(
-                this.getX(),
-                this.getEyeY() - 0.1D,
-                this.getZ()
-        );
-
-        this.level().addFreshEntity(fireball);
-    }
 
     static class RandomFloatAroundGoal extends Goal {
         private final EscobiEntity escobi;
@@ -181,22 +177,8 @@ public class EscobiEntity extends FlyingMob implements  RangedAttackMob {
         }
 
         public void tick() {
-            if (this.escobi.getTarget() == null) {
-                Vec3 vec3 = this.escobi.getDeltaMovement();
-                this.escobi.setYRot(-((float) Mth.atan2(vec3.x, vec3.z)) * (45F / (float) Math.PI));
-                this.escobi.yBodyRot = this.escobi.getYRot();
-            } else {
-                LivingEntity livingentity = this.escobi.getTarget();
-                double d0 = (double) 64.0F;
-                if (livingentity.distanceToSqr(this.escobi) < (double) 4096.0F) {
-                    double d1 = livingentity.getX() - this.escobi.getX();
-                    double d2 = livingentity.getZ() - this.escobi.getZ();
-                    this.escobi.setYRot(-((float) Mth.atan2(d1, d2)) * (45F / (float) Math.PI));
-                    this.escobi.yBodyRot = this.escobi.getYRot();
-                }
-            }
+            LivingEntity target = this.escobi.getTarget();
         }
-
     }
 
     static class EscobiEntityMoveControl extends MoveControl {
@@ -237,24 +219,69 @@ public class EscobiEntity extends FlyingMob implements  RangedAttackMob {
         }
     }
 
-    static class EscobiRangedAttackGoal extends RangedAttackGoal{
+    static class EscobiRangedAttackGoal extends Goal{
 
+        public int loadtime;
         private final EscobiEntity escobi;
-        public EscobiRangedAttackGoal(RangedAttackMob rangedAttackMob, double speedModifier, int attackInterval, float attackRadius) {
-            super(rangedAttackMob, speedModifier, attackInterval, attackRadius);
-            escobi = (EscobiEntity) rangedAttackMob;
+        private boolean hasShot;
+        public double targetX;
+        public double targetY;
+        public double targetZ;
+        public EscobiRangedAttackGoal(EscobiEntity escobi) {
+            this.escobi = escobi;
+            this.hasShot = false;
+            this.setFlags(EnumSet.of(Goal.Flag.LOOK));
         }
+
+        public boolean canUse() {return this.escobi.getTarget() != null;}
 
         @Override
         public void start() {
-            super.start();
+            escobi.attackAnimation.start(escobi.tickCount);
             this.escobi.setAttacking(true);
+            this.targetX = this.escobi.getTarget().getX();
+            this.targetY = this.escobi.getTarget().getY();
+            this.targetZ = this.escobi.getTarget().getZ();
+            this.loadtime = 80;
+        }
+
+        @Override
+        public boolean requiresUpdateEveryTick() {
+            return true;
         }
 
         @Override
         public void stop() {
             this.escobi.setAttacking(false);
+            this.loadtime=0;
+            escobi.attackAnimation.stop();
             super.stop();
+        }
+
+        @Override
+        public void tick() {
+            LivingEntity livingentity = this.escobi.getTarget();
+            if (livingentity != null) {
+                loadtime--;
+                if(loadtime >45) {
+                    System.out.println("MiroFijo");
+                    this.escobi.getLookControl().setLookAt(this.targetX, this.targetY, this.targetZ);
+                } else if ((loadtime==45)) {
+                    escobi.shootFireball(this.targetX,this.targetY,this.targetZ);
+                    this.hasShot = true;
+                }
+                if(this.hasShot){
+                    System.out.println("Trying to look");
+                    this.escobi.getLookControl().setLookAt(livingentity,30.0F,30.0F);
+                    if(loadtime<=0) {
+                        this.hasShot = false;
+                        loadtime = 80;
+                        this.targetX = livingentity.getX();
+                        this.targetY = livingentity.getY();
+                        this.targetZ = livingentity.getZ();
+                    }
+                }
+            }
         }
     }
 }
