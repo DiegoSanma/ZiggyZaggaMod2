@@ -25,7 +25,7 @@ public class EscobiEntity extends FlyingMob implements  Enemy {
     public static final AnimationState idleAnimation = new AnimationState();
     public static final AnimationState attackAnimation = new AnimationState();
     private int idleAnimationTimeout = 0;
-    private int attackAnimationtimeout = -1;
+    private int attackAnimationtimeout = 0;
     private static final EntityDataAccessor<Boolean> ATTACKING =
             SynchedEntityData.defineId(EscobiEntity.class, EntityDataSerializers.BOOLEAN);
 
@@ -56,16 +56,12 @@ public class EscobiEntity extends FlyingMob implements  Enemy {
         } else {
             this.idleAnimationTimeout = this.idleAnimationTimeout - 1;
         }
-        if(this.isAttacking() && attackAnimationtimeout==-1){
+        if(this.isAttacking() && attackAnimationtimeout==0){
             this.attackAnimationtimeout = 80;
             this.attackAnimation.start(this.tickCount);
         }
         if(attackAnimationtimeout>0){
             attackAnimationtimeout--;
-            if(attackAnimationtimeout==0){
-                attackAnimation.stop();
-                attackAnimationtimeout--;
-            }
         }
     }
 

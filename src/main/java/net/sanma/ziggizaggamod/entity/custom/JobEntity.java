@@ -23,26 +23,10 @@ import net.minecraft.world.level.Level;
 
 public class JobEntity extends PathfinderMob {
     public static final AnimationState attackAnimation = new AnimationState();
-    private int attackAnimationtimeout = -1;
-    private static final EntityDataAccessor<Boolean> ATTACKING =
-            SynchedEntityData.defineId(JobEntity.class, EntityDataSerializers.BOOLEAN);
+    private int attackAnimationtimeout = 0;
 
     public JobEntity(EntityType<? extends PathfinderMob> entityType, Level level) {
         super(entityType,level);
-    }
-
-    @Override
-    protected void defineSynchedData(SynchedEntityData.Builder p_326499_) {
-        super.defineSynchedData(p_326499_);
-        p_326499_.define(ATTACKING, false);
-    }
-
-    public boolean isAttacking() {
-        return this.entityData.get(ATTACKING);
-    }
-
-    private void setAttacking(boolean attacking) {
-        this.entityData.set(ATTACKING, attacking);
     }
 
     @Override
@@ -71,20 +55,12 @@ public class JobEntity extends PathfinderMob {
     }
 
     private void setAnimationState() {
-        if(this.isAggressive() && this.attackAnimationtimeout==-1) {
+        if(this.isAggressive() && this.attackAnimationtimeout==0) {
             attackAnimationtimeout = 80;
             attackAnimation.start(this.tickCount);
         }
         if(this.attackAnimationtimeout>0){
             this.attackAnimationtimeout--;
-        } else if (this.attackAnimationtimeout==0) {
-            if(this.isAggressive()) {
-                attackAnimationtimeout+=80;
-            }
-            else {
-                attackAnimation.stop();
-                attackAnimationtimeout=-1;
-            }
         }
     }
     @Override
