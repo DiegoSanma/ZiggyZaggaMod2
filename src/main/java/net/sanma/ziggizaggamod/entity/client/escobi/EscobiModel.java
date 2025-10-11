@@ -1,20 +1,12 @@
-package net.sanma.ziggizaggamod.entity.client;
+package net.sanma.ziggizaggamod.entity.client.escobi;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.model.EntityModel;
-import net.minecraft.client.model.GhastModel;
-import net.minecraft.client.model.ZombieModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
-import net.minecraft.client.renderer.entity.GhastRenderer;
-import net.minecraft.client.renderer.entity.ZombieRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.monster.Zombie;
 import net.sanma.ziggizaggamod.ZiggiZaggaMod;
 public class EscobiModel extends EntityModel<EscobiRenderState> {
     public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(ZiggiZaggaMod.MODID,"escobi"), "main");

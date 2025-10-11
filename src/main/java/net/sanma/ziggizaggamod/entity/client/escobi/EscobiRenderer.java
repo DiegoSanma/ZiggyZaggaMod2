@@ -1,4 +1,4 @@
-package net.sanma.ziggizaggamod.entity.client;
+package net.sanma.ziggizaggamod.entity.client.escobi;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.MultiBufferSource;

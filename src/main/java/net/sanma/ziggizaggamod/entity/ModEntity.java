@@ -9,6 +9,7 @@ import net.minecraft.world.entity.MobCategory;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.sanma.ziggizaggamod.ZiggiZaggaMod;
+import net.sanma.ziggizaggamod.entity.custom.AngelEntity;
 import net.sanma.ziggizaggamod.entity.custom.EscobiEntity;
 import net.sanma.ziggizaggamod.entity.custom.JobEntity;
 
@@ -27,6 +28,11 @@ public class ModEntity {
     public static final Supplier<EntityType<JobEntity>> JOB =
             ENTITY_TYPES.register("job", () -> EntityType.Builder.of(JobEntity::new, MobCategory.CREATURE)
                     .sized(0.5f, 4.0f).build(JOB_KEY));
+
+    public static ResourceKey<EntityType<?>> ANGEL_KEY = ResourceKey.create(Registries.ENTITY_TYPE, ResourceLocation.withDefaultNamespace("angel"));
+    public static final Supplier<EntityType<AngelEntity>> ANGEL =
+            ENTITY_TYPES.register("angel", () -> EntityType.Builder.of(AngelEntity::new, MobCategory.MONSTER)
+                    .sized(2.5f, 4.0f).build(ANGEL_KEY));
 
 
 

@@ -7,26 +7,16 @@ import net.sanma.ziggizaggamod.block.ModBlocks;
 import net.sanma.ziggizaggamod.capability.HeroItem;
 import net.sanma.ziggizaggamod.effect.ModEffects;
 import net.sanma.ziggizaggamod.entity.ModEntity;
-import net.sanma.ziggizaggamod.entity.client.EscobiRenderer;
-import net.sanma.ziggizaggamod.entity.client.JobRenderer;
+import net.sanma.ziggizaggamod.entity.client.angel.AngelRenderer;
+import net.sanma.ziggizaggamod.entity.client.escobi.EscobiRenderer;
+import net.sanma.ziggizaggamod.entity.client.job.JobRenderer;
 import net.sanma.ziggizaggamod.items.ModCreativeModeTabs;
 import net.sanma.ziggizaggamod.items.ModItems;
 import org.slf4j.Logger;
 
 import com.mojang.logging.LogUtils;
 
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.food.FoodProperties;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.level.material.MapColor;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -37,11 +27,6 @@ import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.event.server.ServerStartingEvent;
-import net.neoforged.neoforge.registries.DeferredBlock;
-import net.neoforged.neoforge.registries.DeferredHolder;
-import net.neoforged.neoforge.registries.DeferredItem;
-import net.neoforged.neoforge.registries.DeferredRegister;
-import top.theillusivec4.curios.api.CuriosApi;
 
 // The value here should match an entry in the META-INF/neoforge.mods.toml file
 @Mod(ZiggiZaggaMod.MODID)
@@ -117,6 +102,7 @@ public class ZiggiZaggaMod {
         public static void onClientSetup(FMLClientSetupEvent event) {
             EntityRenderers.register(ModEntity.ESCOBI.get(), EscobiRenderer::new);
             EntityRenderers.register(ModEntity.JOB.get(), JobRenderer::new);
+            EntityRenderers.register(ModEntity.ANGEL.get(), AngelRenderer::new);
         }
     }
 }

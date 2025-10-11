@@ -1,4 +1,4 @@
-package net.sanma.ziggizaggamod.entity.client;
+package net.sanma.ziggizaggamod.entity.client.job;
 
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;

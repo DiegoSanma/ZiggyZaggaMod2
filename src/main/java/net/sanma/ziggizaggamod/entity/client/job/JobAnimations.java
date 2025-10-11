@@ -1,4 +1,4 @@
-package net.sanma.ziggizaggamod.entity.client;
+package net.sanma.ziggizaggamod.entity.client.job;
 
 import net.minecraft.client.animation.AnimationChannel;
 import net.minecraft.client.animation.AnimationDefinition;
