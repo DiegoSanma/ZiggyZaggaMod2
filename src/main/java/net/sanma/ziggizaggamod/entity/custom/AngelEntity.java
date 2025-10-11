@@ -1,15 +1,20 @@
 package net.sanma.ziggizaggamod.entity.custom;
 
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerBossEvent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.BossEvent;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -30,25 +35,29 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.EnumSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
 
 public class AngelEntity extends Monster implements Enemy {
     public static final AnimationState idleAnimation = new AnimationState();
-    private int idleAnimationTimeout = 0;
     public static final AnimationState attack1Animation = new AnimationState();
     public static final AnimationState attack2Animation = new AnimationState();
     public static final AnimationState attack3Animation = new AnimationState();
     public static final AnimationState attack4Animation = new AnimationState();
-    public static int attackCooldown = 0;
 
     private int lastAttackState = -1;
+    private boolean phase2 = false;
+    private boolean phase3 = false;
 
     private static final EntityDataAccessor<Integer> ATTACK_STATE =
             SynchedEntityData.defineId(AngelEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Boolean> ATTACK_COOLDOWN =
             SynchedEntityData.defineId(AngelEntity.class, EntityDataSerializers.BOOLEAN);
+
+    private final ServerBossEvent bossEvent =
+            new ServerBossEvent(Component.literal("The Fallen Angel"), BossEvent.BossBarColor.YELLOW, BossEvent.BossBarOverlay.NOTCHED_10);
 
     public AngelEntity(EntityType<? extends Monster> entityType, Level level) {
         super(entityType, level);
@@ -76,6 +85,12 @@ public class AngelEntity extends Monster implements Enemy {
     public void setAttackCooldown(boolean cooldown){
         this.entityData.set(ATTACK_COOLDOWN, cooldown);
     }
+
+    @Override
+    public boolean fireImmune() {
+        return true;
+    }
+
 
     @Override
     protected void registerGoals() {
@@ -112,9 +127,10 @@ public class AngelEntity extends Monster implements Enemy {
     public static AttributeSupplier.Builder createAttributes() {
         return Monster.createMonsterAttributes()
                 .add(Attributes.MAX_HEALTH, 2000.0D)
-                .add(Attributes.ATTACK_DAMAGE, 15.0D)
+                .add(Attributes.ATTACK_DAMAGE, 10.0D)
                 .add(Attributes.ATTACK_KNOCKBACK,4.0D)
                 .add(Attributes.FLYING_SPEED, 2.0D)
+                .add(Attributes.MOVEMENT_SPEED, 0.2D)
                 .add(Attributes.FOLLOW_RANGE, 48.0D);
     }
 
@@ -161,6 +177,57 @@ public class AngelEntity extends Monster implements Enemy {
         this.setDeltaMovement(vec3);
         // Rotación del mob hacia la dirección del movimiento
         super.aiStep();
+        //Ahora reviso los cuatro casos
+        float healthRatio = this.getHealth() / this.getMaxHealth();
+        this.bossEvent.setProgress(healthRatio);
+        if (healthRatio <= 0.5f && !phase2) {
+            phase2 = true;
+            onPhaseTwoStart();
+        }
+        else if(healthRatio<=0.25f && !phase3) {
+            phase3 = true;
+            onPhaseThreeStart();
+        }
+
+    }
+
+    public void onPhaseTwoStart() {
+        this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(15.0D);
+        if (this.level() instanceof ServerLevel serverLevel) {
+            for (int i = 0; i < 5; i++) {
+                double offsetX = (this.random.nextDouble() - 0.5) * 8;
+                double offsetZ = (this.random.nextDouble() - 0.5) * 8;
+                LightningBolt bolt = EntityType.LIGHTNING_BOLT.create(serverLevel,EntitySpawnReason.TRIGGERED);
+                if (bolt != null) {
+                    bolt.moveTo(this.getX() + offsetX, this.getY(), this.getZ() + offsetZ);
+                    serverLevel.addFreshEntity(bolt);
+                }
+            }
+        }
+    }
+
+    public void onPhaseThreeStart() {
+        this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(15.0D);
+        this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.5D);
+        if (this.level() instanceof ServerLevel serverLevel) {
+            double radius = 12.0D; // radio del aura
+            List<Player> nearbyPlayers = serverLevel.getEntitiesOfClass(Player.class,
+                    this.getBoundingBox().inflate(radius));
+
+            for (Player player : nearbyPlayers) {
+                double dist = this.distanceTo(player);
+                if (dist <= radius) {
+                    // Aplica una mezcla de efectos
+                    player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 100, 1)); // lentitud 5 seg
+                    player.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 60, 0));           // ceguera 3 seg
+
+                    // Partículas visuales sobre el jugador
+                    serverLevel.sendParticles(ParticleTypes.SMOKE,
+                            player.getX(), player.getY() + 1.0, player.getZ(),
+                            20, 0.3, 0.3, 0.3, 0.01);
+                }
+            }
+        }
     }
 
     public void LightningAttack(LivingEntity target) {
@@ -274,6 +341,19 @@ public class AngelEntity extends Monster implements Enemy {
             }
             angel.doHurtTarget(getServerLevel(this.angel), target);
         }
+    }
+
+    /* BOSS BAR */
+    @Override
+    public void startSeenByPlayer(ServerPlayer serverPlayer) {
+        super.startSeenByPlayer(serverPlayer);
+        this.bossEvent.addPlayer(serverPlayer);
+    }
+
+    @Override
+    public void stopSeenByPlayer(ServerPlayer serverPlayer) {
+        super.stopSeenByPlayer(serverPlayer);
+        this.bossEvent.removePlayer(serverPlayer);
     }
 
 }
