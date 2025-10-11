@@ -13,6 +13,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.BossEvent;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
@@ -27,12 +28,18 @@ import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomFlyingGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
+import net.minecraft.world.entity.animal.horse.Horse;
+import net.minecraft.world.entity.animal.horse.SkeletonHorse;
 import net.minecraft.world.entity.boss.wither.WitherBoss;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import net.sanma.ziggizaggamod.items.ModItems;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -62,6 +69,7 @@ public class AngelEntity extends Monster implements Enemy {
     public AngelEntity(EntityType<? extends Monster> entityType, Level level) {
         super(entityType, level);
         this.moveControl = new FlyingMoveControl(this,10,false);
+        this.xpReward = 10000;
     }
 
     @Override
@@ -89,6 +97,11 @@ public class AngelEntity extends Monster implements Enemy {
     @Override
     public boolean fireImmune() {
         return true;
+    }
+
+    @Override
+    public boolean causeFallDamage(float p_147187_, float p_147188_, DamageSource p_147189_) {
+        return false;
     }
 
 
@@ -129,9 +142,9 @@ public class AngelEntity extends Monster implements Enemy {
                 .add(Attributes.MAX_HEALTH, 2000.0D)
                 .add(Attributes.ATTACK_DAMAGE, 10.0D)
                 .add(Attributes.ATTACK_KNOCKBACK,4.0D)
-                .add(Attributes.FLYING_SPEED, 2.0D)
-                .add(Attributes.MOVEMENT_SPEED, 0.2D)
-                .add(Attributes.FOLLOW_RANGE, 48.0D);
+                .add(Attributes.FLYING_SPEED, 0.5D)
+                .add(Attributes.MOVEMENT_SPEED, 0.025D)
+                .add(Attributes.FOLLOW_RANGE, 100.0D);
     }
 
     @Override
@@ -208,7 +221,7 @@ public class AngelEntity extends Monster implements Enemy {
 
     public void onPhaseThreeStart() {
         this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(15.0D);
-        this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.5D);
+        this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.12D);
         if (this.level() instanceof ServerLevel serverLevel) {
             double radius = 12.0D; // radio del aura
             List<Player> nearbyPlayers = serverLevel.getEntitiesOfClass(Player.class,
@@ -227,6 +240,7 @@ public class AngelEntity extends Monster implements Enemy {
                             20, 0.3, 0.3, 0.3, 0.01);
                 }
             }
+            spawnMinionsAttack(serverLevel,5);
         }
     }
 
@@ -260,15 +274,71 @@ public class AngelEntity extends Monster implements Enemy {
 
     }
 
+    private void spawnMinionsAttack(ServerLevel level,int numBackups) {
+
+        for (int i = 0; i < numBackups; i++) {
+            double angle = Math.toRadians(level.random.nextInt(360));
+            double radius = 6.0D + level.random.nextDouble() * 2.0D;
+            double xOffset = Math.cos(angle) * radius;
+            double zOffset = Math.sin(angle) * radius;
+
+            double spawnX = this.getX() + xOffset;
+            double spawnY = this.getY();
+            double spawnZ = this.getZ() + zOffset;
+
+            // Crear el caballo
+            SkeletonHorse horse = EntityType.SKELETON_HORSE.create(level,EntitySpawnReason.TRIGGERED);
+            if (horse != null) {
+                horse.moveTo(spawnX, spawnY, spawnZ, level.random.nextFloat() * 360.0F, 0.0F);
+                horse.setTamed(true);
+                horse.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.35D);
+                horse.getAttribute(Attributes.MAX_HEALTH).setBaseValue(30.0D);
+                horse.setHealth(30.0F);
+
+                // Crear el zombie
+                Zombie rider = EntityType.ZOMBIE.create(level,EntitySpawnReason.TRIGGERED);
+                if (rider != null) {
+                    rider.moveTo(spawnX, spawnY + 1.0D, spawnZ, level.random.nextFloat() * 360.0F, 0.0F);
+                    rider.setCustomName(Component.literal("Angel's Warrior"));
+                    rider.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 1200, 1));
+
+                    // Equipar algo si quieres
+                    rider.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(ModItems.ZIGGIZITE_SWORD.get()));
+                    rider.setItemSlot(EquipmentSlot.HEAD, new ItemStack(Items.IRON_HELMET));
+
+                    // Añadir al mundo
+                    level.addFreshEntity(horse);
+                    level.addFreshEntity(rider);
+
+                    // Montar al zombie sobre el caballo
+                    rider.startRiding(horse, true);
+                    level.sendParticles(
+                            ParticleTypes.SMOKE,
+                            rider.getX(), rider.getY() + 1.0, rider.getZ(), // posición
+                            30, 0.5, 1.0, 0.5, // cantidad, offset X/Y/Z
+                            0.05 // velocidad de las partículas
+                    );
+                }
+
+            }
+        }
+
+        // Sonido o partículas al invocarlos
+        level.playSound(null, this.blockPosition(), SoundEvents.EVOKER_PREPARE_SUMMON, SoundSource.HOSTILE, 1.5F, 1.0F);
+    }
+
+
     public class DualAngelAttackGoal extends Goal {
         private final AngelEntity angel;
         private int lightingCharge;
+        private int spawnCharge;
         private int motionTimeout;
         private int attackSpeed;
 
         public DualAngelAttackGoal(AngelEntity angel) {
             this.angel = angel;
             this.lightingCharge = 0;
+            this.spawnCharge = 0;
             this.motionTimeout = 0;
             this.attackSpeed = -1;
             this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
@@ -287,6 +357,7 @@ public class AngelEntity extends Monster implements Enemy {
 
             angel.getLookControl().setLookAt(target);
             lightingCharge--;
+            spawnCharge--;
             if (lightingCharge == 20) {
                 angel.setAttackCooldown(false);
             }
@@ -298,7 +369,7 @@ public class AngelEntity extends Monster implements Enemy {
                             angel.LightningAttack(target);
                         }
                         case 2 -> {
-                            System.out.println("Spawning minions");
+                            angel.spawnMinionsAttack(getServerLevel(this.angel),1);
                         }
                         case 3, 4 -> {
                             this.WingAttack(target);
@@ -310,8 +381,15 @@ public class AngelEntity extends Monster implements Enemy {
                 }
             } else {
                 double distance = angel.distanceToSqr(target);
+                if(spawnCharge<=0){
+                    angel.setAttackState(2);
+                    angel.setAttackCooldown(true);
+                    this.motionTimeout = 40;
+                    this.attackSpeed = 20;
+                    spawnCharge = 300;
+                }
                 // Ataque a distancia si está lejos
-                if (distance > 36 && lightingCharge <= 0) {
+                else if (distance > 36 && lightingCharge <= 0) {
                     angel.setAttackState(1);
                     angel.setAttackCooldown(true);
                     this.motionTimeout = 40;
