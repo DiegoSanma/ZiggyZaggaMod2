@@ -1,5 +1,6 @@
 package net.sanma.ziggizaggamod.entity.custom;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -8,6 +9,7 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerBossEvent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
@@ -40,6 +42,9 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.sanma.ziggizaggamod.items.ModItems;
+import net.sanma.ziggizaggamod.sound.AngelBattleMusic;
+import net.sanma.ziggizaggamod.sound.ModSounds;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -70,6 +75,14 @@ public class AngelEntity extends Monster implements Enemy {
         super(entityType, level);
         this.moveControl = new FlyingMoveControl(this,10,false);
         this.xpReward = 10000;
+
+    }
+
+    @Override
+    public void onAddedToLevel() {
+        if(this.level().isClientSide()) {
+            AngelBattleMusic.play(this);
+        }
     }
 
     @Override
@@ -142,8 +155,8 @@ public class AngelEntity extends Monster implements Enemy {
                 .add(Attributes.MAX_HEALTH, 2000.0D)
                 .add(Attributes.ATTACK_DAMAGE, 10.0D)
                 .add(Attributes.ATTACK_KNOCKBACK,4.0D)
-                .add(Attributes.FLYING_SPEED, 0.5D)
-                .add(Attributes.MOVEMENT_SPEED, 0.025D)
+                .add(Attributes.FLYING_SPEED, 0.25D)
+                .add(Attributes.MOVEMENT_SPEED, 0.01D)
                 .add(Attributes.FOLLOW_RANGE, 100.0D);
     }
 
@@ -190,7 +203,7 @@ public class AngelEntity extends Monster implements Enemy {
         this.setDeltaMovement(vec3);
         // Rotación del mob hacia la dirección del movimiento
         super.aiStep();
-        //Ahora reviso los cuatro casos
+        //Ahora reviso las fases del boss battle
         float healthRatio = this.getHealth() / this.getMaxHealth();
         this.bossEvent.setProgress(healthRatio);
         if (healthRatio <= 0.5f && !phase2) {
@@ -216,12 +229,13 @@ public class AngelEntity extends Monster implements Enemy {
                     serverLevel.addFreshEntity(bolt);
                 }
             }
+            serverLevel.playSound(null,this.blockPosition(),ModSounds.PHASEONE.get(),SoundSource.HOSTILE);
         }
     }
 
     public void onPhaseThreeStart() {
         this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(15.0D);
-        this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.12D);
+        this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.06D);
         if (this.level() instanceof ServerLevel serverLevel) {
             double radius = 12.0D; // radio del aura
             List<Player> nearbyPlayers = serverLevel.getEntitiesOfClass(Player.class,
@@ -240,6 +254,7 @@ public class AngelEntity extends Monster implements Enemy {
                             20, 0.3, 0.3, 0.3, 0.01);
                 }
             }
+            serverLevel.playSound(null,this.blockPosition(),ModSounds.PHASETWO.get(),SoundSource.HOSTILE);
             spawnMinionsAttack(serverLevel,5);
         }
     }

@@ -1,0 +1,20 @@
+{
+  "angel_battle_music": {
+    "sounds": {
+    "name": "ziggizaggamod:sounds/angel_battle_music",
+    "stream": true
+    }
+  },
+  "phase2": {
+    "subtitle": "sounds.ziggizaggamod.phase2",
+    "sounds": [
+      "ziggizaggamod:phase2"
+    ]
+  },
+  "phase3": {
+    "subtitle": "sounds.ziggizaggamod.phase3",
+    "sounds": [
+      "ziggizaggamod:phase3"
+    ]
+  }
+}

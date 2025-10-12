@@ -64,6 +64,8 @@ public class ModItems {
 
     public static final DeferredItem<Item> ESCOBI_SPAWN_EGG = ITEMS.registerItem("escobi_spawn_egg",
             (properties) -> new SpawnEggItem(ModEntity.ESCOBI.get(), properties));
+    public static final DeferredItem<Item> ANGEL_SPAWN_EGG = ITEMS.registerItem("angel_spawn_egg",
+            (properties) -> new SpawnEggItem(ModEntity.ANGEL.get(), properties));
     public static void register(IEventBus event){
         ITEMS.register(event);
     }

@@ -1,8 +1,9 @@
-// 1.21.4	2025-09-30T16:56:25.0047699	Model Definitions - ziggizaggamod
+// 1.21.4	2025-10-12T13:30:25.805901	Model Definitions - ziggizaggamod
 a96740b1b6cf12152656541b44ea9324c0f59842 assets/ziggizaggamod/blockstates/zaggazite_deepslate_ore.json
 3eab0b368ab6be27238c9f91af2d1d03debc217f assets/ziggizaggamod/blockstates/zaggazite_ore.json
 4919d6d4aeccf50d6a9da2bbaaca54164578f20a assets/ziggizaggamod/blockstates/ziggizite_deepslate_ore.json
 db3a50213a858299c26d383a01deba3bbd564594 assets/ziggizaggamod/blockstates/ziggizite_ore.json
+9d500ee7da71fcd42857fcea5bf60a5d060dca99 assets/ziggizaggamod/items/angel_spawn_egg.json
 600d590eaf3e45d87d16dc54fca3571c9ce3dbef assets/ziggizaggamod/items/dfeovbuck.json
 bee387d8c8ffe97574815f822f8e7be2c6bb6d5e assets/ziggizaggamod/items/donvitomanjarate.json
 4a910701b9e957d34b5132d39ebbf7ec02b5d98f assets/ziggizaggamod/items/escobi_spawn_egg.json
@@ -33,6 +34,7 @@ a9aa7e62e6b1144e5731f4854d6fec740e4678e8 assets/ziggizaggamod/items/ziggizite_pi
 76273a2a382687a5926dad9e6d524c8a3a2a7eb1 assets/ziggizaggamod/models/block/zaggazite_ore.json
 be5a2abb1ac8cf33f437ace3a13dc73d90a6c0e7 assets/ziggizaggamod/models/block/ziggizite_deepslate_ore.json
 2ff3ed8ac91741d11e9d66a07e57a2cf4b0c04a1 assets/ziggizaggamod/models/block/ziggizite_ore.json
+ce7a00aff7c0fdb3f8ad89443f6a185c395b5485 assets/ziggizaggamod/models/item/angel_spawn_egg.json
 b0efa7947a711695d0c480be6ab4a35289f4133d assets/ziggizaggamod/models/item/dfeovbuck.json
 c2857eb0d959a87ad975ee078f8db2401ae877b9 assets/ziggizaggamod/models/item/donvitomanjarate.json
 7c62da4f97f9dbb3d3290b727e0a3c8141bf329e assets/ziggizaggamod/models/item/escobi_spawn_egg.json

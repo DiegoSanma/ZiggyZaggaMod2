@@ -12,6 +12,7 @@ import net.sanma.ziggizaggamod.entity.client.escobi.EscobiRenderer;
 import net.sanma.ziggizaggamod.entity.client.job.JobRenderer;
 import net.sanma.ziggizaggamod.items.ModCreativeModeTabs;
 import net.sanma.ziggizaggamod.items.ModItems;
+import net.sanma.ziggizaggamod.sound.ModSounds;
 import org.slf4j.Logger;
 
 import com.mojang.logging.LogUtils;
@@ -53,6 +54,7 @@ public class ZiggiZaggaMod {
         ModBlocks.register(modEventBus);
 
         ModEntity.register(modEventBus);
+        ModSounds.register(modEventBus);
         // Register the item to a creative tab
         modEventBus.addListener(this::addCreative);
 

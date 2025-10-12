@@ -45,6 +45,7 @@ public class ModCreativeModeTabs {
                                 output.accept(ModItems.ZAGGAZITE_PICKAXE.get());
                                 output.accept(ModItems.ZAGGAZITE_SHOVEL.get());
                                 output.accept(ModItems.ESCOBI_SPAWN_EGG.get());
+                                output.accept(ModItems.ANGEL_SPAWN_EGG.get());
                             }).build());
     public static void register(IEventBus eventBus) {
         CREATIVE_MODE_TABS.register(eventBus);

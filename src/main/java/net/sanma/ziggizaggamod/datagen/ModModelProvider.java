@@ -84,6 +84,7 @@ public class ModModelProvider extends ModelProvider {
                 0.0F, 90.0F, 35.0F);
 
         itemModels.generateFlatItem(ModItems.ESCOBI_SPAWN_EGG.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
+        itemModels.generateFlatItem(ModItems.ANGEL_SPAWN_EGG.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
         blockModels.createTrivialCube(ModBlocks.ZIGGIZITE_ORE.get());
         blockModels.createTrivialCube(ModBlocks.ZIGGIZITE_DEEPSLATE_ORE.get());
         blockModels.createTrivialCube(ModBlocks.ZAGGAZITE_ORE.get());
