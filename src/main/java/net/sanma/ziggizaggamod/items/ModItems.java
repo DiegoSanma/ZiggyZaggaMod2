@@ -8,6 +8,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import net.sanma.ziggizaggamod.ZiggiZaggaMod;
 import net.sanma.ziggizaggamod.capability.*;
 import net.sanma.ziggizaggamod.entity.ModEntity;
+import net.sanma.ziggizaggamod.items.custom.AlcoholItem;
 
 import javax.swing.plaf.basic.BasicComboBoxUI;
 
@@ -66,6 +67,16 @@ public class ModItems {
             (properties) -> new SpawnEggItem(ModEntity.ESCOBI.get(), properties));
     public static final DeferredItem<Item> ANGEL_SPAWN_EGG = ITEMS.registerItem("angel_spawn_egg",
             (properties) -> new SpawnEggItem(ModEntity.ANGEL.get(), properties));
+
+    public static final DeferredItem<Item> PINEAPPLE_SLICE = ITEMS.registerItem("pineapple_slice",
+            (properties -> new Item(properties.food(ModFoodProperties.PINEAPPLE_SLICE))));
+    public static final DeferredItem<Item> EMPANADA = ITEMS.registerItem("empanada",
+        (properties -> new Item(properties.food(ModFoodProperties.EMPANADA))));
+    public static final DeferredItem<Item> GRAPE = ITEMS.registerItem("grape",
+            (properties -> new Item(properties.food(ModFoodProperties.GRAPE))));
+    public static final DeferredItem<Item> TERREMOTO = ITEMS.registerItem("terremoto",
+            (properties -> new AlcoholItem(properties.food(ModFoodProperties.TERREMOTO,ModFoodProperties.TERREMOTO_EFFECT))));
+
     public static void register(IEventBus event){
         ITEMS.register(event);
     }

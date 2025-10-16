@@ -6,6 +6,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import org.checkerframework.checker.units.qual.A;
 import top.theillusivec4.curios.api.SlotContext;
 
 import java.util.List;
@@ -21,7 +22,7 @@ public class PepaItem extends HeroItem{
         Player player = (Player) slotContext.entity();
 
         player.setInvulnerable(true);
-        player.getAttribute(Attributes.MAX_HEALTH).setBaseValue(4);
+        player.getAttribute(Attributes.MAX_HEALTH).setBaseValue(player.getMaxHealth()-16);
     }
 
     @Override
@@ -29,7 +30,7 @@ public class PepaItem extends HeroItem{
         Player player = (Player) slotContext.entity();
 
         player.setInvulnerable(false);
-        player.getAttribute(Attributes.MAX_HEALTH).setBaseValue(20);
+        player.getAttribute(Attributes.MAX_HEALTH).setBaseValue(player.getMaxHealth()+16);
     }
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {

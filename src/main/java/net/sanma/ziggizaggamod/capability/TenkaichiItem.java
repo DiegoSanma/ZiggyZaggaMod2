@@ -41,6 +41,8 @@ public class TenkaichiItem extends HeroItem{
 
         player.getAttribute(Attributes.MAX_HEALTH).setBaseValue(player.getMaxHealth()-4);
     }
+
+
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
         if(Screen.hasShiftDown()){

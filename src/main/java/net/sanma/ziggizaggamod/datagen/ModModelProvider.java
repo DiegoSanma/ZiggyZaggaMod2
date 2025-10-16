@@ -85,6 +85,12 @@ public class ModModelProvider extends ModelProvider {
 
         itemModels.generateFlatItem(ModItems.ESCOBI_SPAWN_EGG.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
         itemModels.generateFlatItem(ModItems.ANGEL_SPAWN_EGG.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
+
+        itemModels.generateFlatItem(ModItems.PINEAPPLE_SLICE.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
+        itemModels.generateFlatItem(ModItems.EMPANADA.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
+        itemModels.generateFlatItem(ModItems.GRAPE.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
+        itemModels.generateFlatItem(ModItems.TERREMOTO.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
+
         blockModels.createTrivialCube(ModBlocks.ZIGGIZITE_ORE.get());
         blockModels.createTrivialCube(ModBlocks.ZIGGIZITE_DEEPSLATE_ORE.get());
         blockModels.createTrivialCube(ModBlocks.ZAGGAZITE_ORE.get());

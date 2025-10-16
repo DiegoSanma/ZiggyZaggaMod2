@@ -77,8 +77,7 @@ public class AngelEntity extends Monster implements Enemy {
     public AngelEntity(EntityType<? extends Monster> entityType, Level level) {
         super(entityType, level);
         this.moveControl = new FlyingMoveControl(this,10,false);
-        this.xpReward = 10000;
-        //this.setPersistenceRequired();
+        this.xpReward = 30000;
 
     }
 
