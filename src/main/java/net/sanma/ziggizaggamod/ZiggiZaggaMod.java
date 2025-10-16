@@ -3,8 +3,11 @@ package net.sanma.ziggizaggamod;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.neoforge.common.NeoForgeConfig;
 import net.sanma.ziggizaggamod.block.ModBlocks;
 import net.sanma.ziggizaggamod.capability.HeroItem;
+import net.sanma.ziggizaggamod.common.CommonProxy;
+import net.sanma.ziggizaggamod.common.network.NeoForgePacketHandler;
 import net.sanma.ziggizaggamod.effect.ModEffects;
 import net.sanma.ziggizaggamod.entity.ModEntity;
 import net.sanma.ziggizaggamod.entity.client.angel.AngelRenderer;
@@ -34,19 +37,23 @@ import net.neoforged.neoforge.event.server.ServerStartingEvent;
 public class ZiggiZaggaMod {
     // Define mod id in a common place for everything to reference
     public static final String MODID = "ziggizaggamod";
-    // Directly reference a slf4j logger
-    public static final Logger LOGGER = LogUtils.getLogger();
+    //public static CommonProxy proxy;
 
     // The constructor for the mod class is the first code that is run when your mod is loaded.
     // FML will recognize some parameter types like IEventBus or ModContainer and pass them in automatically.
     public ZiggiZaggaMod(IEventBus modEventBus, ModContainer modContainer) {
         // Register the commonSetup method for modloading
         modEventBus.addListener(this::commonSetup);
+        //modEventBus.addListener(NeoForgePacketHandler::registerPayloads);
 
         // Register ourselves for server and other game events we are interested in.
         // Note that this is necessary if and only if we want *this* class (ExampleMod) to respond directly to events.
         // Do not add this line if there are no @SubscribeEvent-annotated functions in this class, like onServerStarting() below.
         NeoForge.EVENT_BUS.register(this);
+
+        //NeoForgePacketHandler.registerPayloads(modEventBus);
+
+        //this.proxy = CommonProxy.INSTANCE;
 
         ModCreativeModeTabs.register(modEventBus);
 

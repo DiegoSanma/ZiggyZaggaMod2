@@ -41,6 +41,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import net.sanma.ziggizaggamod.ZiggiZaggaMod;
+import net.sanma.ziggizaggamod.common.CommonProxy;
+import net.sanma.ziggizaggamod.common.network.NeoForgePacketHandler;
 import net.sanma.ziggizaggamod.items.ModItems;
 import net.sanma.ziggizaggamod.sound.AngelBattleMusic;
 import net.sanma.ziggizaggamod.sound.ModSounds;
@@ -80,8 +83,10 @@ public class AngelEntity extends Monster implements Enemy {
 
     @Override
     public void onAddedToLevel() {
-        if(this.level().isClientSide()) {
-            AngelBattleMusic.play(this);
+        super.onAddedToLevel();
+        if(!this.level().isClientSide()) {
+            System.out.println("Llamo al handler");
+            NeoForgePacketHandler.sendBattleMusicToNearbyPlayers(this);
         }
     }
 
