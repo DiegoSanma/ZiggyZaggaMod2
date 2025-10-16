@@ -78,16 +78,8 @@ public class AngelEntity extends Monster implements Enemy {
         super(entityType, level);
         this.moveControl = new FlyingMoveControl(this,10,false);
         this.xpReward = 10000;
+        //this.setPersistenceRequired();
 
-    }
-
-    @Override
-    public void onAddedToLevel() {
-        super.onAddedToLevel();
-        if(!this.level().isClientSide()) {
-            System.out.println("Llamo al handler");
-            NeoForgePacketHandler.sendBattleMusicToNearbyPlayers(this);
-        }
     }
 
     @Override
@@ -122,6 +114,10 @@ public class AngelEntity extends Monster implements Enemy {
         return false;
     }
 
+    @Override
+    public boolean removeWhenFarAway(double distanceToClosestPlayer) {
+        return false;
+    }
 
     @Override
     protected void registerGoals() {
@@ -162,7 +158,7 @@ public class AngelEntity extends Monster implements Enemy {
                 .add(Attributes.ATTACK_KNOCKBACK,4.0D)
                 .add(Attributes.FLYING_SPEED, 0.25D)
                 .add(Attributes.MOVEMENT_SPEED, 0.01D)
-                .add(Attributes.FOLLOW_RANGE, 100.0D);
+                .add(Attributes.FOLLOW_RANGE, 64.0D);
     }
 
     @Override
@@ -446,12 +442,14 @@ public class AngelEntity extends Monster implements Enemy {
     public void startSeenByPlayer(ServerPlayer serverPlayer) {
         super.startSeenByPlayer(serverPlayer);
         this.bossEvent.addPlayer(serverPlayer);
+        NeoForgePacketHandler.sendBattleMusicToPlayer(serverPlayer,this.getId());
     }
 
     @Override
     public void stopSeenByPlayer(ServerPlayer serverPlayer) {
         super.stopSeenByPlayer(serverPlayer);
         this.bossEvent.removePlayer(serverPlayer);
+        NeoForgePacketHandler.sendBattleMusicToPlayer(serverPlayer,this.getId());
     }
 
 }

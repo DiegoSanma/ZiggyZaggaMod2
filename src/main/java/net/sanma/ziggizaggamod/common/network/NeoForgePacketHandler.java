@@ -16,6 +16,10 @@ import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 import net.sanma.ziggizaggamod.ZiggiZaggaMod;
 import net.sanma.ziggizaggamod.common.network.clientbound.AngelBattleMusicHandler;
 import net.sanma.ziggizaggamod.common.network.clientbound.AngelBattleMusicPacket;
+import net.sanma.ziggizaggamod.common.network.clientbound.StopAngelBattleMusicHandler;
+import net.sanma.ziggizaggamod.common.network.clientbound.StopAngelBattleMusicPacket;
+
+import java.util.List;
 
 @EventBusSubscriber(modid = ZiggiZaggaMod.MODID,bus = EventBusSubscriber.Bus.MOD)
 public class NeoForgePacketHandler {
@@ -29,21 +33,23 @@ public class NeoForgePacketHandler {
                 AngelBattleMusicPacket.STREAM_CODEC,
                 new AngelBattleMusicHandler()
         );
+        registrar.playToClient(
+                StopAngelBattleMusicPacket.TYPE,
+                StopAngelBattleMusicPacket.STREAM_CODEC,
+                new StopAngelBattleMusicHandler()
+        );
     }
     /** Enviar música a un jugador específico */
     public static void sendBattleMusicToPlayer(ServerPlayer player,int AngelId) {
         var payload = new AngelBattleMusicPacket(ResourceLocation.fromNamespaceAndPath(ZiggiZaggaMod.MODID,"start_angel_music").toString(),AngelId);
-        System.out.println("Cree el payload y estoy por mandarlo");
-        player.connection.send(payload);
+        System.out.println("Encontre a alguien, mandándole el payload");
+        PacketDistributor.sendToPlayer(player, payload);
     }
 
-    /** Enviar música a todos los jugadores cercanos a una entidad */
-    public static void sendBattleMusicToNearbyPlayers(Entity boss) {
-        System.out.println("Cree el payload y estoy por mandarlo");
-        //if (!(boss.level() instanceof ServerLevel level)) return;
-        int AngelId = boss.getId();
-        var payload = new AngelBattleMusicPacket(ResourceLocation.fromNamespaceAndPath(ZiggiZaggaMod.MODID,"angel_battle_music").toString(),AngelId);
-        PacketDistributor.sendToPlayersTrackingEntity(boss, payload);
+    public static void stopBattleMusic(ServerPlayer player,int AngelId) {
+        var payload = new StopAngelBattleMusicPacket("stop_angel_music",AngelId);
+        System.out.println("Encontre a alguien, el payload");
+        PacketDistributor.sendToPlayer(player, payload);
 
     }
 }

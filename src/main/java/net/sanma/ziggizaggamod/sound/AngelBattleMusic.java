@@ -22,13 +22,13 @@ public class AngelBattleMusic  extends AbstractTickableSoundInstance {
     @Override
     public void tick() {
         System.out.println("AngelBattleMusic");
-        //if (!entity.isAlive()) {
-        //    System.out.println("AngelBattleMusic is dead");
-        //    this.stop();
-        //} else {
-        //    this.x = (float) entity.getX();
-        //    this.y = (float) entity.getY();
-        //    this.z = (float) entity.getZ();
-        //}
+        if (!entity.isAlive()) {
+            System.out.println("AngelBattleMusic is dead");
+            this.stop();
+        } else {
+            this.x = (float) entity.getX();
+            this.y = (float) entity.getY();
+            this.z = (float) entity.getZ();
+        }
     }
 }
