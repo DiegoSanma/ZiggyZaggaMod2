@@ -15,6 +15,7 @@ import net.sanma.ziggizaggamod.entity.ModEntity;
 import net.sanma.ziggizaggamod.entity.client.angel.AngelRenderer;
 import net.sanma.ziggizaggamod.entity.client.escobi.EscobiRenderer;
 import net.sanma.ziggizaggamod.entity.client.job.JobRenderer;
+import net.sanma.ziggizaggamod.entity.client.pineapple.PineappleProjectileRenderer;
 import net.sanma.ziggizaggamod.items.ModCreativeModeTabs;
 import net.sanma.ziggizaggamod.items.ModItems;
 import net.sanma.ziggizaggamod.sound.ModSounds;
@@ -114,6 +115,7 @@ public class ZiggiZaggaMod {
             EntityRenderers.register(ModEntity.ESCOBI.get(), EscobiRenderer::new);
             EntityRenderers.register(ModEntity.JOB.get(), JobRenderer::new);
             EntityRenderers.register(ModEntity.ANGEL.get(), AngelRenderer::new);
+            EntityRenderers.register(ModEntity.PINEAPPLE_PROJECTILE.get(), PineappleProjectileRenderer::new);
             ItemBlockRenderTypes.setRenderLayer(ModBlocks.PINEAPPLE_BUSH.get(), RenderType.CUTOUT);
         }
     }

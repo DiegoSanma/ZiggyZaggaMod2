@@ -14,6 +14,7 @@ import net.sanma.ziggizaggamod.entity.ModEntity;
 import net.sanma.ziggizaggamod.entity.client.angel.AngelModel;
 import net.sanma.ziggizaggamod.entity.client.escobi.EscobiModel;
 import net.sanma.ziggizaggamod.entity.client.job.JobModel;
+import net.sanma.ziggizaggamod.entity.client.pineapple.PineappleProjectileModel;
 import net.sanma.ziggizaggamod.entity.custom.AngelEntity;
 import net.sanma.ziggizaggamod.entity.custom.EscobiEntity;
 import net.sanma.ziggizaggamod.entity.custom.JobEntity;
@@ -25,6 +26,7 @@ public class ModEventBusEvents {
         event.registerLayerDefinition(EscobiModel.LAYER_LOCATION, EscobiModel::createBodyLayer);
         event.registerLayerDefinition(JobModel.LAYER_LOCATION, JobModel::createBodyLayer);
         event.registerLayerDefinition(AngelModel.LAYER_LOCATION, AngelModel::createBodyLayer);
+        event.registerLayerDefinition(PineappleProjectileModel.LAYER_LOCATION, PineappleProjectileModel::createBodyLayer);
     }
 
     @SubscribeEvent

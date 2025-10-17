@@ -10,6 +10,7 @@ import net.sanma.ziggizaggamod.block.ModBlocks;
 import net.sanma.ziggizaggamod.capability.*;
 import net.sanma.ziggizaggamod.entity.ModEntity;
 import net.sanma.ziggizaggamod.items.custom.AlcoholItem;
+import net.sanma.ziggizaggamod.items.custom.PineappleItem;
 
 import javax.swing.plaf.basic.BasicComboBoxUI;
 
@@ -70,7 +71,7 @@ public class ModItems {
             (properties) -> new SpawnEggItem(ModEntity.ANGEL.get(), properties));
 
     public static final DeferredItem<Item> PINEAPPLE = ITEMS.registerItem("pineapple",
-            (properties) -> new BlockItem(ModBlocks.PINEAPPLE_BUSH.get(), properties.food(ModFoodProperties.PINEAPPLE)));
+            (properties) -> new PineappleItem(ModBlocks.PINEAPPLE_BUSH.get(), properties.food(ModFoodProperties.PINEAPPLE)));
     public static final DeferredItem<Item> PINEAPPLE_SLICE = ITEMS.registerItem("pineapple_slice",
             (properties -> new Item(properties.food(ModFoodProperties.PINEAPPLE_SLICE))));
     public static final DeferredItem<Item> EMPANADA = ITEMS.registerItem("empanada",
