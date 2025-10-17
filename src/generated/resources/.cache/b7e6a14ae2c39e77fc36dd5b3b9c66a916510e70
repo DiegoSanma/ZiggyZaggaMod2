@@ -1,4 +1,11 @@
-// 1.21.4	2025-10-17T12:44:31.1712273	Model Definitions - ziggizaggamod
+// 1.21.4	2025-10-17T13:16:27.1379376	Model Definitions - ziggizaggamod
+81c3a1507629b86ac10ea39b0000c5366bcb0fe8 assets/minecraft/blockstates/sweet_berry_bush.json
+dc707adf79a511e1fef28576ba500166bc5eb3bf assets/minecraft/items/sweet_berries.json
+12022c802100be6d515481fefaf8c9a674a25a2e assets/minecraft/models/block/sweet_berry_bush_stage0.json
+3c4d34bd224ebd4e07d94be4a10725fe4c14e41e assets/minecraft/models/block/sweet_berry_bush_stage1.json
+483f9f67cb07287a7a0bc1ead729a2a74ec31631 assets/minecraft/models/block/sweet_berry_bush_stage2.json
+8ea9e7308c759bba8d17ef8e4fd3b022664fa9e3 assets/minecraft/models/block/sweet_berry_bush_stage3.json
+b7759e8006959089b93e09c9ed3a88b728decd41 assets/minecraft/models/item/sweet_berries.json
 246a84cd1b933a92ed8bd515a4b8b0e917e62f14 assets/ziggizaggamod/blockstates/pineapple_bush.json
 a96740b1b6cf12152656541b44ea9324c0f59842 assets/ziggizaggamod/blockstates/zaggazite_deepslate_ore.json
 3eab0b368ab6be27238c9f91af2d1d03debc217f assets/ziggizaggamod/blockstates/zaggazite_ore.json

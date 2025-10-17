@@ -7,6 +7,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.biome.MobSpawnSettings;
+import net.minecraft.world.level.levelgen.GenerationStep;
 import net.neoforged.neoforge.common.world.BiomeModifier;
 import net.neoforged.neoforge.common.world.BiomeModifiers;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
@@ -20,6 +21,7 @@ import static net.sanma.ziggizaggamod.worldgen.ModConfiguredFeatures.registerKey
 public class ModBiomeModifiers {
 
     public static final ResourceKey<BiomeModifier> SPAWN_ESCOBI = registerKey("spawn_escobi");
+    public static final ResourceKey<BiomeModifier> ADD_PINEAPPLE_BUSH = registerKey("add_pineapple_bush");
     public static void bootstrap(BootstrapContext<BiomeModifier> context) {
         var placedFeatures = context.lookup(Registries.PLACED_FEATURE);
         var biomes = context.lookup(Registries.BIOME);
@@ -28,6 +30,10 @@ public class ModBiomeModifiers {
                 HolderSet.direct(biomes.getOrThrow(Biomes.SWAMP), biomes.getOrThrow(Biomes.PLAINS)),
                 List.of(new MobSpawnSettings.SpawnerData(ModEntity.ESCOBI.get(), 20, 1, 1))));
 
+        context.register(ADD_PINEAPPLE_BUSH, new BiomeModifiers.AddFeaturesBiomeModifier(
+                HolderSet.direct(biomes.getOrThrow(Biomes.JUNGLE), biomes.getOrThrow(Biomes.SAVANNA),biomes.getOrThrow(Biomes.SAVANNA_PLATEAU)),
+                HolderSet.direct(placedFeatures.getOrThrow(ModPlacedFeatures.PINEAPPLE_BUSH_PLACED_KEY)),
+                GenerationStep.Decoration.VEGETAL_DECORATION));
     }
     private static ResourceKey<BiomeModifier> registerKey(String name) {
         return ResourceKey.create(NeoForgeRegistries.Keys.BIOME_MODIFIERS, ResourceLocation.fromNamespaceAndPath(ZiggiZaggaMod.MODID, name));

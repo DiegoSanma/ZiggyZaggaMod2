@@ -1,2 +1,5 @@
-// 1.21.4	2025-10-07T17:18:48.3920765	Registries
+// 1.21.4	2025-10-17T13:19:49.46661	Registries
+b46fcd8333e022fe494cdef3cb93875dcf7b58e3 data/ziggizaggamod/neoforge/biome_modifier/add_pineapple_bush.json
 302b465a156992f06e540a79163672c39cd92ed6 data/ziggizaggamod/neoforge/biome_modifier/spawn_escobi.json
+240dce39895dace82521eaccbd0ba648e59c5eae data/ziggizaggamod/worldgen/configured_feature/pineapple_bush.json
+bef65348337359ef036657187720120ccca6619e data/ziggizaggamod/worldgen/placed_feature/pineapple_bush_placed.json
