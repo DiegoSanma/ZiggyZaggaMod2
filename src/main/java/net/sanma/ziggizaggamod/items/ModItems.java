@@ -79,7 +79,12 @@ public class ModItems {
     public static final DeferredItem<Item> GRAPE = ITEMS.registerItem("grape",
             (properties -> new Item(properties.food(ModFoodProperties.GRAPE))));
     public static final DeferredItem<Item> TERREMOTO = ITEMS.registerItem("terremoto",
-            (properties -> new AlcoholItem(properties.food(ModFoodProperties.TERREMOTO,ModFoodProperties.TERREMOTO_EFFECT))));
+            (properties -> new AlcoholItem(properties.food(ModFoodProperties.ALCOHOL,ModFoodProperties.TERREMOTO_EFFECT))));
+    public static final DeferredItem<Item> PIPENO = ITEMS.registerItem("pipeno",
+            (properties -> new AlcoholItem(properties.food(ModFoodProperties.ALCOHOL,ModFoodProperties.PIPENO_EFFECT))));
+    public static final DeferredItem<Item> GRANADINA = ITEMS.registerItem("granadina",
+            (properties -> new AlcoholItem(properties.food(ModFoodProperties.ALCOHOL,ModFoodProperties.GRANADINA_EFFECT))));
+
 
 
     public static void register(IEventBus event){

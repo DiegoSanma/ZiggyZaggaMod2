@@ -51,6 +51,7 @@ public class ModCreativeModeTabs {
                                 output.accept(ModItems.EMPANADA.get());
                                 output.accept(ModItems.GRAPE.get());
                                 output.accept(ModItems.TERREMOTO.get());
+                                output.accept(ModItems.PIPENO.get());
                             }).build());
     public static void register(IEventBus eventBus) {
         CREATIVE_MODE_TABS.register(eventBus);
