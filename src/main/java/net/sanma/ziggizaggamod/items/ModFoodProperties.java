@@ -8,6 +8,9 @@ import net.minecraft.world.item.component.Consumables;
 import net.minecraft.world.item.consume_effects.ApplyStatusEffectsConsumeEffect;
 
 public class ModFoodProperties {
+    public static final FoodProperties PINEAPPLE =
+            new FoodProperties.Builder().nutrition(3).saturationModifier(3.0f).build();
+
     public static final FoodProperties PINEAPPLE_SLICE =
             new FoodProperties.Builder().nutrition(2).saturationModifier(2.0f).build();
 

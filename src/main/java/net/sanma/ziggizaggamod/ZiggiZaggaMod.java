@@ -1,5 +1,7 @@
 package net.sanma.ziggizaggamod;
 
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
@@ -112,6 +114,7 @@ public class ZiggiZaggaMod {
             EntityRenderers.register(ModEntity.ESCOBI.get(), EscobiRenderer::new);
             EntityRenderers.register(ModEntity.JOB.get(), JobRenderer::new);
             EntityRenderers.register(ModEntity.ANGEL.get(), AngelRenderer::new);
+            ItemBlockRenderTypes.setRenderLayer(ModBlocks.PINEAPPLE_BUSH.get(), RenderType.CUTOUT);
         }
     }
 }

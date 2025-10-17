@@ -4,7 +4,12 @@ import com.google.gson.JsonElement;
 import net.minecraft.client.data.models.BlockModelGenerators;
 import net.minecraft.client.data.models.ItemModelGenerators;
 import net.minecraft.client.data.models.ModelProvider;
+import net.minecraft.client.data.models.blockstates.MultiVariantGenerator;
+import net.minecraft.client.data.models.blockstates.PropertyDispatch;
+import net.minecraft.client.data.models.blockstates.Variant;
+import net.minecraft.client.data.models.blockstates.VariantProperties;
 import net.minecraft.client.data.models.model.*;
+import net.minecraft.client.renderer.block.model.BlockModel;
 import net.minecraft.client.renderer.item.ClientItem;
 import net.minecraft.client.renderer.item.ItemModel;
 import net.minecraft.core.Holder;
@@ -15,12 +20,16 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.fml.common.Mod;
 import net.sanma.ziggizaggamod.ZiggiZaggaMod;
 import net.sanma.ziggizaggamod.block.ModBlocks;
+import net.sanma.ziggizaggamod.block.custom.PineappleBushBlock;
 import net.sanma.ziggizaggamod.items.ModItems;
 
 import java.util.HashMap;
@@ -86,6 +95,7 @@ public class ModModelProvider extends ModelProvider {
         itemModels.generateFlatItem(ModItems.ESCOBI_SPAWN_EGG.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
         itemModels.generateFlatItem(ModItems.ANGEL_SPAWN_EGG.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
 
+        itemModels.generateFlatItem(ModItems.PINEAPPLE.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
         itemModels.generateFlatItem(ModItems.PINEAPPLE_SLICE.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
         itemModels.generateFlatItem(ModItems.EMPANADA.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
         itemModels.generateFlatItem(ModItems.GRAPE.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
@@ -95,6 +105,10 @@ public class ModModelProvider extends ModelProvider {
         blockModels.createTrivialCube(ModBlocks.ZIGGIZITE_DEEPSLATE_ORE.get());
         blockModels.createTrivialCube(ModBlocks.ZAGGAZITE_ORE.get());
         blockModels.createTrivialCube(ModBlocks.ZAGGAZITE_DEEPSLATE_ORE.get());
+
+        this.createPineappleBush(blockModels);
+        blockModels.createSweetBerryBush();
+        //blockModels.createCropBlock(ModBlocks.PINEAPPLE_BUSH.get(), PineappleBushBlock.AGE,  0, 1, 2, 3);
 
     }
     protected ResourceLocation createFlatScaleItemModel(Item p_378447_, ModModelTemplate p_376080_, ItemModelGenerators gen,
@@ -110,6 +124,11 @@ public class ModModelProvider extends ModelProvider {
                                             float rotx, float roty,float rotz) {
         gen.itemModelOutput.accept(item,ItemModelUtils.plainModel(
                 this.createFlatScaleItemModel(item, template,gen,scalex,scaley,scalez,translatex,translatey,translatez,rotx,roty,rotz)));
+    }
+
+    public void createPineappleBush(BlockModelGenerators gen) {
+        //gen.registerSimpleFlatItemModel(ModItems.PINEAPPLE.get());
+        gen.blockStateOutput.accept(MultiVariantGenerator.multiVariant(ModBlocks.PINEAPPLE_BUSH.get()).with(PropertyDispatch.property(BlockStateProperties.AGE_3).generate((p_388136_) -> Variant.variant().with(VariantProperties.MODEL, gen.createSuffixedVariant(ModBlocks.PINEAPPLE_BUSH.get(), "_stage" + p_388136_, ModelTemplates.CROSS, TextureMapping::cross)))));
     }
 
 

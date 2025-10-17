@@ -6,6 +6,7 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.sanma.ziggizaggamod.ZiggiZaggaMod;
+import net.sanma.ziggizaggamod.block.ModBlocks;
 import net.sanma.ziggizaggamod.capability.*;
 import net.sanma.ziggizaggamod.entity.ModEntity;
 import net.sanma.ziggizaggamod.items.custom.AlcoholItem;
@@ -68,6 +69,8 @@ public class ModItems {
     public static final DeferredItem<Item> ANGEL_SPAWN_EGG = ITEMS.registerItem("angel_spawn_egg",
             (properties) -> new SpawnEggItem(ModEntity.ANGEL.get(), properties));
 
+    public static final DeferredItem<Item> PINEAPPLE = ITEMS.registerItem("pineapple",
+            (properties) -> new BlockItem(ModBlocks.PINEAPPLE_BUSH.get(), properties.food(ModFoodProperties.PINEAPPLE)));
     public static final DeferredItem<Item> PINEAPPLE_SLICE = ITEMS.registerItem("pineapple_slice",
             (properties -> new Item(properties.food(ModFoodProperties.PINEAPPLE_SLICE))));
     public static final DeferredItem<Item> EMPANADA = ITEMS.registerItem("empanada",
@@ -76,6 +79,7 @@ public class ModItems {
             (properties -> new Item(properties.food(ModFoodProperties.GRAPE))));
     public static final DeferredItem<Item> TERREMOTO = ITEMS.registerItem("terremoto",
             (properties -> new AlcoholItem(properties.food(ModFoodProperties.TERREMOTO,ModFoodProperties.TERREMOTO_EFFECT))));
+
 
     public static void register(IEventBus event){
         ITEMS.register(event);
