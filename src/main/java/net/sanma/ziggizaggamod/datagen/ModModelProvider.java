@@ -67,6 +67,8 @@ public class ModModelProvider extends ModelProvider {
         itemModels.generateFlatItem(ModItems.PEPA_SKULL.get(), ModelTemplates.FLAT_ITEM);
         itemModels.generateFlatItem(ModItems.YONYE_BREAD.get(), ModelTemplates.FLAT_ITEM);
         itemModels.generateFlatItem(ModItems.DONVITO_MANJARATE.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(ModItems.WOLF_SOUL.get(), ModelTemplates.FLAT_ITEM);
+
         itemModels.generateFlatItem(ModItems.ZAGGAZITE.get(), ModelTemplates.FLAT_ITEM);
         itemModels.generateFlatItem(ModItems.ZIGGIZITE.get(), ModelTemplates.FLAT_ITEM);
         itemModels.generateFlatItem(ModItems.ZAGGAZITE_NUGGET.get(), ModelTemplates.FLAT_ITEM);
@@ -102,6 +104,7 @@ public class ModModelProvider extends ModelProvider {
         itemModels.generateFlatItem(ModItems.TERREMOTO.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
         itemModels.generateFlatItem(ModItems.PIPENO.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
         itemModels.generateFlatItem(ModItems.GRANADINA.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
+        itemModels.generateFlatItem(ModItems.PINEAPPLE_ICE_CREAM.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
 
         blockModels.createTrivialCube(ModBlocks.ZIGGIZITE_ORE.get());
         blockModels.createTrivialCube(ModBlocks.ZIGGIZITE_DEEPSLATE_ORE.get());
@@ -109,7 +112,6 @@ public class ModModelProvider extends ModelProvider {
         blockModels.createTrivialCube(ModBlocks.ZAGGAZITE_DEEPSLATE_ORE.get());
 
         this.createPineappleBush(blockModels);
-        //blockModels.createCropBlock(ModBlocks.PINEAPPLE_BUSH.get(), PineappleBushBlock.AGE,  0, 1, 2, 3);
 
     }
     protected ResourceLocation createFlatScaleItemModel(Item p_378447_, ModModelTemplate p_376080_, ItemModelGenerators gen,

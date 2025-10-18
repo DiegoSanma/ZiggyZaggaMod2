@@ -41,8 +41,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.sanma.ziggizaggamod.ZiggiZaggaMod;
-import net.sanma.ziggizaggamod.common.CommonProxy;
 import net.sanma.ziggizaggamod.common.network.NeoForgePacketHandler;
 import net.sanma.ziggizaggamod.items.ModItems;
 import net.sanma.ziggizaggamod.sound.AngelBattleMusic;
@@ -257,6 +255,23 @@ public class AngelEntity extends Monster implements Enemy {
             serverLevel.playSound(null,this.blockPosition(),ModSounds.PHASETWO.get(),SoundSource.HOSTILE);
             spawnMinionsAttack(serverLevel,5);
         }
+    }
+
+    @Override
+    protected SoundEvent getHurtSound(DamageSource damageSource) {
+        return ModSounds.ANGEL_HURT.get();
+    }
+
+    @Override
+    protected void playHurtSound(DamageSource source) {
+        this.level().playSound(
+                null,
+                this.getX(), this.getY(), this.getZ(),
+                this.getHurtSound(source),
+                this.getSoundSource(),
+                0.3F, // 🔊 volumen personalizado (más bajo que 1.0F)
+                1.0F  // tono
+        );
     }
 
     public void LightningAttack(LivingEntity target) {

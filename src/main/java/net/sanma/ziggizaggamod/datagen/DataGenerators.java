@@ -66,7 +66,8 @@ public class DataGenerators {
         );
 
         gen.addProvider(true,
-                new CuriosSlotProvider(ZiggiZaggaMod.MODID,output,lookupProvider));
+                new CuriosSlotProvider(ZiggiZaggaMod.MODID, output, lookupProvider));
+        gen.addProvider(true, new ModGlobalLootModifierProvider(output, lookupProvider));
     }
     @SubscribeEvent
     public static void gatherServerData(GatherDataEvent.Server event) {

@@ -8,8 +8,6 @@ import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.common.NeoForgeConfig;
 import net.sanma.ziggizaggamod.block.ModBlocks;
 import net.sanma.ziggizaggamod.capability.HeroItem;
-import net.sanma.ziggizaggamod.common.CommonProxy;
-import net.sanma.ziggizaggamod.common.network.NeoForgePacketHandler;
 import net.sanma.ziggizaggamod.effect.ModEffects;
 import net.sanma.ziggizaggamod.entity.ModEntity;
 import net.sanma.ziggizaggamod.entity.client.angel.AngelRenderer;
@@ -18,6 +16,7 @@ import net.sanma.ziggizaggamod.entity.client.job.JobRenderer;
 import net.sanma.ziggizaggamod.entity.client.pineapple.PineappleProjectileRenderer;
 import net.sanma.ziggizaggamod.items.ModCreativeModeTabs;
 import net.sanma.ziggizaggamod.items.ModItems;
+import net.sanma.ziggizaggamod.loot.ModLootModifiers;
 import net.sanma.ziggizaggamod.sound.ModSounds;
 import org.slf4j.Logger;
 
@@ -65,6 +64,7 @@ public class ZiggiZaggaMod {
 
         ModEntity.register(modEventBus);
         ModSounds.register(modEventBus);
+        ModLootModifiers.register(modEventBus);
         // Register the item to a creative tab
         modEventBus.addListener(this::addCreative);
 

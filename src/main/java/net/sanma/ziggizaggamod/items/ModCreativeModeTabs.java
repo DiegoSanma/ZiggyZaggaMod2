@@ -27,6 +27,7 @@ public class ModCreativeModeTabs {
                                 output.accept(ModItems.PEPA_SKULL.get());
                                 output.accept(ModItems.YONYE_BREAD.get());
                                 output.accept(ModItems.DONVITO_MANJARATE.get());
+                                output.accept(ModItems.WOLF_SOUL.get());
                                 output.accept(ModItems.ZAGGAZITE_NUGGET.get());
                                 output.accept(ModItems.ZIGGIZITE_NUGGET.get());
                                 output.accept(ModItems.ZAGGAZITE.get());
@@ -52,6 +53,8 @@ public class ModCreativeModeTabs {
                                 output.accept(ModItems.GRAPE.get());
                                 output.accept(ModItems.TERREMOTO.get());
                                 output.accept(ModItems.PIPENO.get());
+                                output.accept(ModItems.GRANADINA.get());
+                                output.accept(ModItems.PINEAPPLE_ICE_CREAM.get());
                             }).build());
     public static void register(IEventBus eventBus) {
         CREATIVE_MODE_TABS.register(eventBus);

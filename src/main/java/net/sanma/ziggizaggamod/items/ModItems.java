@@ -11,6 +11,7 @@ import net.sanma.ziggizaggamod.capability.*;
 import net.sanma.ziggizaggamod.entity.ModEntity;
 import net.sanma.ziggizaggamod.items.custom.AlcoholItem;
 import net.sanma.ziggizaggamod.items.custom.PineappleItem;
+import net.sanma.ziggizaggamod.items.custom.WolfSoulItem;
 
 import javax.swing.plaf.basic.BasicComboBoxUI;
 
@@ -35,6 +36,10 @@ public class ModItems {
             ITEMS.registerItem("gaboliver", GaboItem::new,new Item.Properties());
     public static final DeferredItem<Item> DONVITO_MANJARATE =
             ITEMS.registerItem("donvitomanjarate", DonvitoItem::new,new Item.Properties());
+    public static final DeferredItem<Item> WOLF_SOUL = ITEMS.registerItem("wolf_soul",
+            WolfSoulItem::new, new Item.Properties());
+
+
     public static final DeferredItem<Item> ZIGGIZITE_NUGGET =
             ITEMS.registerItem("ziggizite_nugget",Item::new,new Item.Properties());
     public static final DeferredItem<Item> ZIGGIZITE =
@@ -84,7 +89,8 @@ public class ModItems {
             (properties -> new AlcoholItem(properties.food(ModFoodProperties.ALCOHOL,ModFoodProperties.PIPENO_EFFECT))));
     public static final DeferredItem<Item> GRANADINA = ITEMS.registerItem("granadina",
             (properties -> new AlcoholItem(properties.food(ModFoodProperties.ALCOHOL,ModFoodProperties.GRANADINA_EFFECT))));
-
+    public static final DeferredItem<Item> PINEAPPLE_ICE_CREAM = ITEMS.registerItem("pineapple_ice_cream",
+            Item::new,new Item.Properties());
 
 
     public static void register(IEventBus event){

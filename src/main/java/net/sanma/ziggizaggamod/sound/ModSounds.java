@@ -17,7 +17,9 @@ public class ModSounds {
     public static final DeferredRegister<SoundEvent> SOUND_EVENTS =
             DeferredRegister.create(BuiltInRegistries.SOUND_EVENT, ZiggiZaggaMod.MODID);
 
+    //THanks to Keys Of Moon for angel music
     public static final Supplier<SoundEvent> ANGEL_MUSIC = registerSoundEvent("angel_battle_music");
+    public static final Supplier<SoundEvent> ANGEL_HURT = registerSoundEvent("angel_hurt");
     public static final Supplier<SoundEvent> PHASEONE = registerSoundEvent("phase2");
     public static final Supplier<SoundEvent> PHASETWO = registerSoundEvent("phase3");
 

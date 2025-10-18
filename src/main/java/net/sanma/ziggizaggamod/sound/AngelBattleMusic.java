@@ -14,8 +14,8 @@ public class AngelBattleMusic  extends AbstractTickableSoundInstance {
         this.entity = entity;
         this.looping = true;
         //this.delay = 0;
-        this.volume = 1.0F;
-        this.pitch = 1.0F;
+        this.volume = 0.4F;
+        this.pitch = 0.5F;
         System.out.println("Se creo la instancia");
     }
 

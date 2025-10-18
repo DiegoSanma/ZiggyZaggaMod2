@@ -1,4 +1,4 @@
-// 1.21.4	2025-10-17T15:33:44.5312759	Model Definitions - ziggizaggamod
+// 1.21.4	2025-10-17T20:29:53.8318974	Model Definitions - ziggizaggamod
 246a84cd1b933a92ed8bd515a4b8b0e917e62f14 assets/ziggizaggamod/blockstates/pineapple_bush.json
 a96740b1b6cf12152656541b44ea9324c0f59842 assets/ziggizaggamod/blockstates/zaggazite_deepslate_ore.json
 3eab0b368ab6be27238c9f91af2d1d03debc217f assets/ziggizaggamod/blockstates/zaggazite_ore.json
@@ -16,11 +16,13 @@ aee88379a66313a394eb74b6fbf99845f0536162 assets/ziggizaggamod/items/grape.json
 8dfb1c746e03ea6a1e8719c8380df9d64c587fca assets/ziggizaggamod/items/pepaskull.json
 ecc6a05b86ec7933fb447ea8af4115a2c99259e9 assets/ziggizaggamod/items/pineapple.json
 f1d58530295c27a43bdf175b94e7692fb03a856e assets/ziggizaggamod/items/pineapple_bush.json
+fd484d521f8d5641f410caf30e108b1d855b3746 assets/ziggizaggamod/items/pineapple_ice_cream.json
 612875e48f6004bca2642fd78afca81bfe58f22e assets/ziggizaggamod/items/pineapple_slice.json
 d862a81aa35a7b55682eec1218162cd8f968773c assets/ziggizaggamod/items/pipeno.json
 9688e0e16b4ca283e632269bb7002a9ee9529738 assets/ziggizaggamod/items/sanmaglasses.json
 54c498c0ad12b0dbe58de3f4e81b2f32113986b8 assets/ziggizaggamod/items/tenkaichidogtag.json
 790f3ed22dac20a547035bdc305a1c51eb54d0a0 assets/ziggizaggamod/items/terremoto.json
+02de7f8daed249b58b5e4c0cf82944f435b82212 assets/ziggizaggamod/items/wolf_soul.json
 acd5b52edb719bd1fd499cc7c506e0a69b42da92 assets/ziggizaggamod/items/yonyebread.json
 f76e43ad8f16725359ff4f1d44c7f474cd37c974 assets/ziggizaggamod/items/zaggazite.json
 59cb5664c52edad4aa33ab10df7dadc36fbd6bfa assets/ziggizaggamod/items/zaggazite_axe.json
@@ -58,11 +60,13 @@ a2c22271f5c3f59a01bdd5acda2384db87bd6d95 assets/ziggizaggamod/models/item/grape.
 f4f49e57aa9483934f8c35c5588d3811e44ae5fe assets/ziggizaggamod/models/item/miguelstache.json
 9993c3e0f88d60d32aa5a4510580729ef622b49a assets/ziggizaggamod/models/item/pepaskull.json
 939ff73320d9508892326f2c84296c30bba2bbac assets/ziggizaggamod/models/item/pineapple.json
+1c19c41dcf0de7b41446cc5ed2cf247765568756 assets/ziggizaggamod/models/item/pineapple_ice_cream.json
 4f0bf87f8ac687992177ee50dd819b3c5648e407 assets/ziggizaggamod/models/item/pineapple_slice.json
 d91c45afd8451334fc51c8a51c21b8719f5db767 assets/ziggizaggamod/models/item/pipeno.json
 00e47f142410bd5504a3863d0658aa3cb3404afd assets/ziggizaggamod/models/item/sanmaglasses.json
 ac2248594c8b945af4666c170780d49452c43f7e assets/ziggizaggamod/models/item/tenkaichidogtag.json
 2ff32817ddce918a3cf6561e968c2cffe1ba4402 assets/ziggizaggamod/models/item/terremoto.json
+2c0483f5271ccf4392200372c29e830b34748e92 assets/ziggizaggamod/models/item/wolf_soul.json
 fb663fc2493a1df9c7fd5f0df7fdff29a62e5f72 assets/ziggizaggamod/models/item/yonyebread.json
 69ea2a56e157bed698108c71656350679de4d68d assets/ziggizaggamod/models/item/zaggazite.json
 ff14f71e566b5a95bd5918a59f406097201273dd assets/ziggizaggamod/models/item/zaggazite_axe.json

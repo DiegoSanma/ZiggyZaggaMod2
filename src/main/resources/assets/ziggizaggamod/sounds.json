@@ -11,6 +11,12 @@
       }
     ]
   },
+  "angel_hurt": {
+    "subtitle": "sounds.ziggizaggamod.angel_hurt",
+    "sounds": [
+      "ziggizaggamod:angel_hurt"
+    ]
+  },
   "phase2": {
     "subtitle": "sounds.ziggizaggamod.phase2",
     "sounds": [
