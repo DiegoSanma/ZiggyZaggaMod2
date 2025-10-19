@@ -16,6 +16,7 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemEntityPropertyC
 import net.neoforged.neoforge.common.data.GlobalLootModifierProvider;
 import net.neoforged.neoforge.common.loot.LootTableIdCondition;
 import net.sanma.ziggizaggamod.ZiggiZaggaMod;
+import net.sanma.ziggizaggamod.condition.TamedWolfCondition;
 import net.sanma.ziggizaggamod.items.ModItems;
 import net.sanma.ziggizaggamod.loot.AddItemModifiers;
 
@@ -32,7 +33,7 @@ public class ModGlobalLootModifierProvider extends GlobalLootModifierProvider {
                 new AddItemModifiers(new LootItemCondition[] {
                         // Aseguramos que el loot original venga de la tabla de lobos
                         new LootTableIdCondition.Builder(ResourceLocation.withDefaultNamespace("entities/wolf")).build(),
-
+                        new TamedWolfCondition()
                 }, ModItems.WOLF_SOUL.get()));
     }
 }

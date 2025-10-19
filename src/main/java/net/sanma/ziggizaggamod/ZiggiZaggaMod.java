@@ -8,6 +8,7 @@ import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.common.NeoForgeConfig;
 import net.sanma.ziggizaggamod.block.ModBlocks;
 import net.sanma.ziggizaggamod.capability.HeroItem;
+import net.sanma.ziggizaggamod.condition.ModLootConditions;
 import net.sanma.ziggizaggamod.effect.ModEffects;
 import net.sanma.ziggizaggamod.entity.ModEntity;
 import net.sanma.ziggizaggamod.entity.client.angel.AngelRenderer;
@@ -58,6 +59,8 @@ public class ZiggiZaggaMod {
         //this.proxy = CommonProxy.INSTANCE;
 
         ModCreativeModeTabs.register(modEventBus);
+
+        ModLootConditions.register();
 
         ModItems.register(modEventBus);
         ModBlocks.register(modEventBus);

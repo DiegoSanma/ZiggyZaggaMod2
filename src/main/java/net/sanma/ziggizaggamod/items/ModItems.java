@@ -11,10 +11,6 @@ import net.sanma.ziggizaggamod.capability.*;
 import net.sanma.ziggizaggamod.entity.ModEntity;
 import net.sanma.ziggizaggamod.items.custom.AlcoholItem;
 import net.sanma.ziggizaggamod.items.custom.PineappleItem;
-import net.sanma.ziggizaggamod.items.custom.WolfSoulItem;
-
-import javax.swing.plaf.basic.BasicComboBoxUI;
-
 
 public class ModItems {
     //Deffered Register for Items
@@ -37,7 +33,7 @@ public class ModItems {
     public static final DeferredItem<Item> DONVITO_MANJARATE =
             ITEMS.registerItem("donvitomanjarate", DonvitoItem::new,new Item.Properties());
     public static final DeferredItem<Item> WOLF_SOUL = ITEMS.registerItem("wolf_soul",
-            WolfSoulItem::new, new Item.Properties());
+            Item::new, new Item.Properties());
 
 
     public static final DeferredItem<Item> ZIGGIZITE_NUGGET =
