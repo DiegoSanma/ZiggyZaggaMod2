@@ -47,35 +47,6 @@ body:
     validations:
       required: true
 
-  - type: textarea
-    id: steps
-    attributes:
-      label: Pasos para reproducir
-      description: "¿Cómo se reproduce el bug?"
-      placeholder: |
-        1. Generar el Angel con su spawn egg.
-        2. Bajarle la vida hasta el 50%.
-        3. Observar que no cambia de fase.
-    validations:
-      required: true
-
-  - type: input
-    id: file
-    attributes:
-      label: Archivo / clase sospechosa
-      description: "Si sabes de dónde viene el problema, indica el archivo o clase."
-      placeholder: "ej: AngelEntity.java, DfeoItem.java"
-    validations:
-      required: false
-
-  - type: textarea
-    id: logs
-    attributes:
-      label: Logs / Stack trace
-      description: "Pega aquí cualquier error del log si aplica."
-      render: shell
-    validations:
-      required: false
 
   - type: textarea
     id: notes
