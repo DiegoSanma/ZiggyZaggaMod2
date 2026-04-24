@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: NeoForge Docs
+    url: https://docs.neoforged.net/
+    about: Documentación oficial de NeoForge para referencia técnica.

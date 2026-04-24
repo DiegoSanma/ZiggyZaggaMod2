@@ -1,0 +1,85 @@
+name: "Bug Report"
+description: "Reportar un comportamiento incorrecto, crash o problema en el mod."
+title: "[BUG] "
+labels: ["bug"]
+body:
+  - type: input
+    id: summary
+    attributes:
+      label: Resumen del bug
+      description: "Una línea describiendo el problema."
+      placeholder: "ej: El Angel no transiciona a la fase 2 correctamente"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Área afectada
+      options:
+        - HeroItem / Curio slot
+        - Entidad (Escobi / Angel)
+        - Mineral / Bloque / Generación de mundo
+        - Receta / Crafting
+        - Efecto (Spiderman u otro)
+        - Sonido / Música
+        - Modelo / Textura / Animación
+        - Crash / Excepción
+        - Otro
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Comportamiento esperado
+      description: "¿Qué debería pasar?"
+      placeholder: "Al llegar al 50% de vida, el Angel debería aumentar su daño y ejecutar el ataque de relámpago."
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Comportamiento actual
+      description: "¿Qué pasa en realidad?"
+      placeholder: "El Angel se queda en fase 1 indefinidamente y no cambia ningún atributo."
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Pasos para reproducir
+      description: "¿Cómo se reproduce el bug?"
+      placeholder: |
+        1. Generar el Angel con su spawn egg.
+        2. Bajarle la vida hasta el 50%.
+        3. Observar que no cambia de fase.
+    validations:
+      required: true
+
+  - type: input
+    id: file
+    attributes:
+      label: Archivo / clase sospechosa
+      description: "Si sabes de dónde viene el problema, indica el archivo o clase."
+      placeholder: "ej: AngelEntity.java, DfeoItem.java"
+    validations:
+      required: false
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs / Stack trace
+      description: "Pega aquí cualquier error del log si aplica."
+      render: shell
+    validations:
+      required: false
+
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notas adicionales
+    validations:
+      required: false

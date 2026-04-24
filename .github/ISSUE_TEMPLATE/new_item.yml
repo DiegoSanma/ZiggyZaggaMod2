@@ -1,0 +1,76 @@
+name: "Nuevo Item / Feature"
+description: "Agregar un nuevo item, bloque, entidad, efecto u otro contenido al mod."
+title: "[NEW] "
+labels: ["enhancement"]
+body:
+  - type: input
+    id: name
+    attributes:
+      label: Nombre del contenido
+      description: "¿Cómo se va a llamar el item, bloque o entidad?"
+      placeholder: "ej: Ziggazite Sword, Angel Boss, HeroItem de Pepito"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: type
+    attributes:
+      label: Tipo de contenido
+      options:
+        - Item (herramienta, arma, armor)
+        - HeroItem (curio slot)
+        - Bloque / Mineral
+        - Entidad (mob, boss)
+        - Efecto (potion effect)
+        - Receta
+        - Sonido
+        - Otro
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Descripción general
+      description: "¿Qué hace este contenido? ¿Cuál es su propósito dentro del mod?"
+      placeholder: "Describe el comportamiento, la idea detrás del item, etc."
+    validations:
+      required: true
+
+  - type: textarea
+    id: mechanics
+    attributes:
+      label: Mecánicas / Efectos
+      description: "Si es un HeroItem: describe qué hace en onEquip, onUnequip y curioTick. Si es una entidad: salud, atributos, comportamiento. Si es un bloque: dureza, drops, generación."
+      placeholder: |
+        - onEquip: ...
+        - curioTick: ...
+        - onUnequip: ...
+    validations:
+      required: false
+
+  - type: textarea
+    id: recipe
+    attributes:
+      label: Receta / Obtención
+      description: "¿Cómo se obtiene? Crafteo, drop de mob, generación en el mundo, etc."
+      placeholder: "ej: 3x3 con lingotes de Ziggizite, drop del Angel con 10% de probabilidad..."
+    validations:
+      required: false
+
+  - type: textarea
+    id: assets
+    attributes:
+      label: Assets necesarios
+      description: "¿Qué texturas, modelos o sonidos necesita? ¿Ya existen o hay que crearlos?"
+      placeholder: "ej: textura del item en textures/item/, modelo animado con Geckolib..."
+    validations:
+      required: false
+
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notas adicionales
+      description: "Referencias, inspiración, restricciones técnicas, dependencias con otros items, etc."
+    validations:
+      required: false

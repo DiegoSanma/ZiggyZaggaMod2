@@ -1,0 +1,72 @@
+name: "Modificación"
+description: "Cambiar el comportamiento, valores, textura, sonido o receta de algo que ya existe."
+title: "[MOD] "
+labels: ["modification"]
+body:
+  - type: input
+    id: target
+    attributes:
+      label: ¿Qué se modifica?
+      description: "Nombre del item, bloque, entidad o sistema a modificar."
+      placeholder: "ej: TenkaichiItem, AngelEntity fase 3, Zaggazite Ore generation"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: type
+    attributes:
+      label: Tipo de modificación
+      options:
+        - Comportamiento / Lógica (curioTick, AI, efectos)
+        - Valores numéricos (daño, salud, velocidad, duración)
+        - Textura / Modelo / Animación
+        - Sonido
+        - Receta / Crafting
+        - Generación de mundo (vein size, Y range, frecuencia)
+        - Tooltip / Texto
+        - Otro
+    validations:
+      required: true
+
+  - type: textarea
+    id: current
+    attributes:
+      label: Estado actual
+      description: "¿Cómo funciona o se ve ahora?"
+      placeholder: "El TenkaichiItem gamble corre cada segundo y tiene un rango de ±10 niveles de XP."
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposed
+    attributes:
+      label: Cambio propuesto
+      description: "¿Cómo debería quedar? Sé específico con valores si aplica."
+      placeholder: "Cambiar el rango de gamble a ±5 niveles y reducir el cooldown a 2 segundos."
+    validations:
+      required: true
+
+  - type: textarea
+    id: reason
+    attributes:
+      label: Motivo del cambio
+      description: "¿Por qué es necesario? Balance, bug, estética, feedback, etc."
+      placeholder: "El gamble actual es demasiado agresivo y puede dejar al jugador sin XP muy rápido."
+    validations:
+      required: false
+
+  - type: input
+    id: file
+    attributes:
+      label: Archivo / clase a editar
+      description: "¿Qué archivo(s) hay que modificar?"
+      placeholder: "ej: TenkaichiItem.java, ModRecipeProvider.java"
+    validations:
+      required: false
+
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notas adicionales
+    validations:
+      required: false
