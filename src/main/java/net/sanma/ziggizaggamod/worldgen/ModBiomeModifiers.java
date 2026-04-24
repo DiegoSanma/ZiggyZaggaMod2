@@ -22,7 +22,6 @@ import static net.sanma.ziggizaggamod.worldgen.ModConfiguredFeatures.registerKey
 public class ModBiomeModifiers {
 
     public static final ResourceKey<BiomeModifier> SPAWN_ESCOBI = registerKey("spawn_escobi");
-    public static final ResourceKey<BiomeModifier> ADD_PINEAPPLE_BUSH = registerKey("add_pineapple_bush");
     public static final ResourceKey<BiomeModifier> ADD_ZIGGIZITE_ORE = registerKey("add_ziggizite_ore");
     public static final ResourceKey<BiomeModifier> ADD_ZAGGAZITE_ORE = registerKey("add_zaggazite_ore");
     public static final ResourceKey<BiomeModifier> ADD_LARGE_ZIGGIZITE_ORE = registerKey("add_large_ziggizite_ore");
@@ -39,11 +38,6 @@ public class ModBiomeModifiers {
         context.register(SPAWN_ESCOBI, new BiomeModifiers.AddSpawnsBiomeModifier(
                 HolderSet.direct(biomes.getOrThrow(Biomes.SWAMP), biomes.getOrThrow(Biomes.PLAINS)),
                 List.of(new MobSpawnSettings.SpawnerData(ModEntity.ESCOBI.get(), 20, 1, 1))));
-
-        context.register(ADD_PINEAPPLE_BUSH, new BiomeModifiers.AddFeaturesBiomeModifier(
-                HolderSet.direct(biomes.getOrThrow(Biomes.JUNGLE), biomes.getOrThrow(Biomes.SAVANNA),biomes.getOrThrow(Biomes.SAVANNA_PLATEAU)),
-                HolderSet.direct(placedFeatures.getOrThrow(ModPlacedFeatures.PINEAPPLE_BUSH_PLACED_KEY)),
-                GenerationStep.Decoration.VEGETAL_DECORATION));
 
         context.register(ADD_ZIGGIZITE_ORE, new BiomeModifiers.AddFeaturesBiomeModifier(
                 biomes.getOrThrow(BiomeTags.IS_OVERWORLD),

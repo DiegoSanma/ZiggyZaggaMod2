@@ -117,6 +117,7 @@ public class ModRecipeProvider extends RecipeProvider implements DataProvider {
                 .pattern(" B")
                 .define('A', ModItems.ZAGGAZITE.get()).define('B',Items.STICK)
                 .unlockedBy(getHasName(ModItems.ZAGGAZITE.get()),has(ModItems.ZAGGAZITE.get())).save(this.output);
+
     }
 
     @Override

@@ -8,13 +8,10 @@ import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.common.NeoForgeConfig;
 import net.sanma.ziggizaggamod.block.ModBlocks;
 import net.sanma.ziggizaggamod.capability.HeroItem;
-import net.sanma.ziggizaggamod.condition.ModLootConditions;
 import net.sanma.ziggizaggamod.effect.ModEffects;
 import net.sanma.ziggizaggamod.entity.ModEntity;
 import net.sanma.ziggizaggamod.entity.client.angel.AngelRenderer;
 import net.sanma.ziggizaggamod.entity.client.escobi.EscobiRenderer;
-import net.sanma.ziggizaggamod.entity.client.job.JobRenderer;
-import net.sanma.ziggizaggamod.entity.client.pineapple.PineappleProjectileRenderer;
 import net.sanma.ziggizaggamod.items.ModCreativeModeTabs;
 import net.sanma.ziggizaggamod.items.ModItems;
 import net.sanma.ziggizaggamod.loot.ModLootModifiers;
@@ -59,8 +56,6 @@ public class ZiggiZaggaMod {
         //this.proxy = CommonProxy.INSTANCE;
 
         ModCreativeModeTabs.register(modEventBus);
-
-        ModLootConditions.register();
 
         ModItems.register(modEventBus);
         ModBlocks.register(modEventBus);
@@ -116,10 +111,8 @@ public class ZiggiZaggaMod {
         @SubscribeEvent
         public static void onClientSetup(FMLClientSetupEvent event) {
             EntityRenderers.register(ModEntity.ESCOBI.get(), EscobiRenderer::new);
-            EntityRenderers.register(ModEntity.JOB.get(), JobRenderer::new);
             EntityRenderers.register(ModEntity.ANGEL.get(), AngelRenderer::new);
-            EntityRenderers.register(ModEntity.PINEAPPLE_PROJECTILE.get(), PineappleProjectileRenderer::new);
-            ItemBlockRenderTypes.setRenderLayer(ModBlocks.PINEAPPLE_BUSH.get(), RenderType.CUTOUT);
+
         }
     }
 }

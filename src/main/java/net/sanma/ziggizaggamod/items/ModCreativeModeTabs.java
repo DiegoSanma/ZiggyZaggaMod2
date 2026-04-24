@@ -47,14 +47,6 @@ public class ModCreativeModeTabs {
                                 output.accept(ModItems.ZAGGAZITE_SHOVEL.get());
                                 output.accept(ModItems.ESCOBI_SPAWN_EGG.get());
                                 output.accept(ModItems.ANGEL_SPAWN_EGG.get());
-                                output.accept(ModItems.PINEAPPLE.get());
-                                output.accept(ModItems.PINEAPPLE_SLICE.get());
-                                output.accept(ModItems.EMPANADA.get());
-                                output.accept(ModItems.GRAPE.get());
-                                output.accept(ModItems.TERREMOTO.get());
-                                output.accept(ModItems.PIPENO.get());
-                                output.accept(ModItems.GRANADINA.get());
-                                output.accept(ModItems.PINEAPPLE_ICE_CREAM.get());
                             }).build());
     public static void register(IEventBus eventBus) {
         CREATIVE_MODE_TABS.register(eventBus);

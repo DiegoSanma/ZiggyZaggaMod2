@@ -5,6 +5,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.SpawnPlacementTypes;
 import net.minecraft.world.entity.animal.Wolf;
@@ -24,11 +25,8 @@ import net.sanma.ziggizaggamod.ZiggiZaggaMod;
 import net.sanma.ziggizaggamod.entity.ModEntity;
 import net.sanma.ziggizaggamod.entity.client.angel.AngelModel;
 import net.sanma.ziggizaggamod.entity.client.escobi.EscobiModel;
-import net.sanma.ziggizaggamod.entity.client.job.JobModel;
-import net.sanma.ziggizaggamod.entity.client.pineapple.PineappleProjectileModel;
 import net.sanma.ziggizaggamod.entity.custom.AngelEntity;
 import net.sanma.ziggizaggamod.entity.custom.EscobiEntity;
-import net.sanma.ziggizaggamod.entity.custom.JobEntity;
 import net.sanma.ziggizaggamod.items.ModItems;
 
 @EventBusSubscriber(modid = ZiggiZaggaMod.MODID, bus = EventBusSubscriber.Bus.MOD)
@@ -36,15 +34,12 @@ public class ModEventBusEvents {
     @SubscribeEvent
     public static void registerLayers(EntityRenderersEvent.RegisterLayerDefinitions event) {
         event.registerLayerDefinition(EscobiModel.LAYER_LOCATION, EscobiModel::createBodyLayer);
-        event.registerLayerDefinition(JobModel.LAYER_LOCATION, JobModel::createBodyLayer);
         event.registerLayerDefinition(AngelModel.LAYER_LOCATION, AngelModel::createBodyLayer);
-        event.registerLayerDefinition(PineappleProjectileModel.LAYER_LOCATION, PineappleProjectileModel::createBodyLayer);
     }
 
     @SubscribeEvent
     public static void registerAttributes(EntityAttributeCreationEvent event) {
         event.put(ModEntity.ESCOBI.get(), EscobiEntity.createAttributes().build());
-        event.put(ModEntity.JOB.get(), JobEntity.createAttributes().build());
         event.put(ModEntity.ANGEL.get(), AngelEntity.createAttributes().build());
     }
 
@@ -52,8 +47,6 @@ public class ModEventBusEvents {
     public static void registerSpawnPlacements(RegisterSpawnPlacementsEvent event) {
         event.register(ModEntity.ESCOBI.get(), SpawnPlacementTypes.NO_RESTRICTIONS, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 Monster::checkMobSpawnRules, RegisterSpawnPlacementsEvent.Operation.REPLACE);
-        event.register(ModEntity.JOB.get(),SpawnPlacementTypes.NO_RESTRICTIONS, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
-                Mob::checkMobSpawnRules, RegisterSpawnPlacementsEvent.Operation.REPLACE);
     }
 
 
@@ -89,7 +82,7 @@ public class ModEventBusEvents {
             level.addFreshEntity(drop);
 
             // Mata al lobo
-            wolf.discard();
+            wolf.remove(Entity.RemovalReason.KILLED);
 
             // Consume el ítem si no es creativo
             if (!player.isCreative()) {

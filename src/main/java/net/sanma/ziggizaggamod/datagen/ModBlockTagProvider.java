@@ -8,8 +8,6 @@ import net.neoforged.neoforge.common.data.BlockTagsProvider;
 import net.sanma.ziggizaggamod.ZiggiZaggaMod;
 import net.sanma.ziggizaggamod.block.ModBlocks;
 import net.sanma.ziggizaggamod.util.ModTags;
-
-import javax.annotation.Nullable;
 import java.util.concurrent.CompletableFuture;
 
 public class ModBlockTagProvider extends BlockTagsProvider {

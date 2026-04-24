@@ -11,8 +11,6 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import net.sanma.ziggizaggamod.ZiggiZaggaMod;
 import net.sanma.ziggizaggamod.entity.custom.AngelEntity;
 import net.sanma.ziggizaggamod.entity.custom.EscobiEntity;
-import net.sanma.ziggizaggamod.entity.custom.JobEntity;
-import net.sanma.ziggizaggamod.entity.custom.PineappleProjectileEntity;
 
 import java.util.function.Supplier;
 
@@ -26,21 +24,11 @@ public class ModEntity {
                     .sized(0.5f, 2.5f).build(ESCOBI_KEY));
 
     public static ResourceKey<EntityType<?>> JOB_KEY = ResourceKey.create(Registries.ENTITY_TYPE, ResourceLocation.withDefaultNamespace("job"));
-    public static final Supplier<EntityType<JobEntity>> JOB =
-            ENTITY_TYPES.register("job", () -> EntityType.Builder.of(JobEntity::new, MobCategory.CREATURE)
-                    .sized(0.5f, 4.0f).build(JOB_KEY));
 
     public static ResourceKey<EntityType<?>> ANGEL_KEY = ResourceKey.create(Registries.ENTITY_TYPE, ResourceLocation.withDefaultNamespace("angel"));
     public static final Supplier<EntityType<AngelEntity>> ANGEL =
             ENTITY_TYPES.register("angel", () -> EntityType.Builder.of(AngelEntity::new, MobCategory.MONSTER)
                     .sized(2.5f, 4.0f).build(ANGEL_KEY));
-
-    public static ResourceKey<EntityType<?>> PINEAPPLE_PROJECTILE_KEY = ResourceKey.create(Registries.ENTITY_TYPE, ResourceLocation.withDefaultNamespace("pineapple"));
-    public static final Supplier<EntityType<PineappleProjectileEntity>> PINEAPPLE_PROJECTILE =
-            ENTITY_TYPES.register("pineapple_projectile", () -> EntityType.Builder.<PineappleProjectileEntity>of(PineappleProjectileEntity::new, MobCategory.MISC)
-                    .sized(0.5f, 1.15f).build(PINEAPPLE_PROJECTILE_KEY));
-
-
 
     public static void register(IEventBus eventBus) {
         ENTITY_TYPES.register(eventBus);

@@ -7,14 +7,10 @@ import net.minecraft.data.worldgen.placement.OrePlacements;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.SweetBerryBushBlock;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 import net.minecraft.world.level.levelgen.feature.configurations.OreConfiguration;
-import net.minecraft.world.level.levelgen.feature.configurations.SimpleBlockConfiguration;
-import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 import net.minecraft.world.level.levelgen.structure.templatesystem.RuleTest;
 import net.minecraft.world.level.levelgen.structure.templatesystem.TagMatchTest;
 import net.sanma.ziggizaggamod.ZiggiZaggaMod;
@@ -23,7 +19,6 @@ import net.sanma.ziggizaggamod.block.ModBlocks;
 import java.util.List;
 
 public class ModConfiguredFeatures {
-    public static final ResourceKey<ConfiguredFeature<?, ?>> PINEAPPLE_BUSH_KEY = registerKey("pineapple_bush");
     public static final ResourceKey<ConfiguredFeature<?, ?>> ZIGGIZITE_ORE_KEY = registerKey("ziggizite_ore");
     public static final ResourceKey<ConfiguredFeature<?, ?>> ZAGGAZITE_ORE_KEY = registerKey("zaggazite_ore");
     public static final ResourceKey<ConfiguredFeature<?, ?>> ZIGGIZITE_LARGE_ORE_KEY = registerKey("ziggizite_large_ore");
@@ -55,11 +50,6 @@ public class ModConfiguredFeatures {
         register(context, ZIGGIZITE_VERY_SMALL_ORE_KEY, Feature.ORE, new OreConfiguration(overworldZiggiziteOres, 1));
         register(context, ZAGGAZITE_LARGE_ORE_KEY, Feature.ORE, new OreConfiguration(overworldZaggaziteOres, 6));
         register(context, ZIGGIZITE_LARGE_ORE_KEY, Feature.ORE, new OreConfiguration(overworldZiggiziteOres, 6));
-        register(context, PINEAPPLE_BUSH_KEY, Feature.RANDOM_PATCH,
-                FeatureUtils.simplePatchConfiguration(Feature.SIMPLE_BLOCK,
-                        new SimpleBlockConfiguration(BlockStateProvider.simple(ModBlocks.PINEAPPLE_BUSH.get()
-                                .defaultBlockState().setValue(SweetBerryBushBlock.AGE, 3))
-                        ), List.of(Blocks.GRASS_BLOCK)));
     }
     private static <FC extends FeatureConfiguration, F extends Feature<FC>> void register(BootstrapContext<ConfiguredFeature<?, ?>> context,
                                                                                           ResourceKey<ConfiguredFeature<?, ?>> key, F feature, FC configuration) {
