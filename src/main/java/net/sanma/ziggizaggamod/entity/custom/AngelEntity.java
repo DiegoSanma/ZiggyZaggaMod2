@@ -30,15 +30,12 @@ import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomFlyingGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
-import net.minecraft.world.entity.animal.horse.Horse;
-import net.minecraft.world.entity.animal.horse.SkeletonHorse;
 import net.minecraft.world.entity.boss.wither.WitherBoss;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.monster.Monster;
-import net.minecraft.world.entity.monster.Zombie;
+import net.minecraft.world.entity.monster.Vex;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.sanma.ziggizaggamod.common.network.NeoForgePacketHandler;
@@ -253,7 +250,7 @@ public class AngelEntity extends Monster implements Enemy {
                 }
             }
             serverLevel.playSound(null,this.blockPosition(),ModSounds.PHASETWO.get(),SoundSource.HOSTILE);
-            spawnMinionsAttack(serverLevel,5);
+            spawnMinionsAttack(serverLevel, 6);
         }
     }
 
@@ -304,8 +301,7 @@ public class AngelEntity extends Monster implements Enemy {
 
     }
 
-    private void spawnMinionsAttack(ServerLevel level,int numBackups) {
-
+    private void spawnMinionsAttack(ServerLevel level, int numBackups) {
         for (int i = 0; i < numBackups; i++) {
             double angle = Math.toRadians(level.random.nextInt(360));
             double radius = 6.0D + level.random.nextDouble() * 2.0D;
@@ -316,44 +312,19 @@ public class AngelEntity extends Monster implements Enemy {
             double spawnY = this.getY();
             double spawnZ = this.getZ() + zOffset;
 
-            // Crear el caballo
-            SkeletonHorse horse = EntityType.SKELETON_HORSE.create(level,EntitySpawnReason.TRIGGERED);
-            if (horse != null) {
-                horse.moveTo(spawnX, spawnY, spawnZ, level.random.nextFloat() * 360.0F, 0.0F);
-                horse.setTamed(true);
-                horse.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.35D);
-                horse.getAttribute(Attributes.MAX_HEALTH).setBaseValue(30.0D);
-                horse.setHealth(30.0F);
-
-                // Crear el zombie
-                Zombie rider = EntityType.ZOMBIE.create(level,EntitySpawnReason.TRIGGERED);
-                if (rider != null) {
-                    rider.moveTo(spawnX, spawnY + 1.0D, spawnZ, level.random.nextFloat() * 360.0F, 0.0F);
-                    rider.setCustomName(Component.literal("Angel's Warrior"));
-                    rider.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 1200, 1));
-
-                    // Equipar algo si quieres
-                    rider.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(ModItems.ZIGGIZITE_SWORD.get()));
-                    rider.setItemSlot(EquipmentSlot.HEAD, new ItemStack(Items.IRON_HELMET));
-
-                    // Añadir al mundo
-                    level.addFreshEntity(horse);
-                    level.addFreshEntity(rider);
-
-                    // Montar al zombie sobre el caballo
-                    rider.startRiding(horse, true);
-                    level.sendParticles(
-                            ParticleTypes.SMOKE,
-                            rider.getX(), rider.getY() + 1.0, rider.getZ(), // posición
-                            30, 0.5, 1.0, 0.5, // cantidad, offset X/Y/Z
-                            0.05 // velocidad de las partículas
-                    );
-                }
-
+            Vex vex = EntityType.VEX.create(level, EntitySpawnReason.TRIGGERED);
+            if (vex != null) {
+                vex.moveTo(spawnX, spawnY, spawnZ, level.random.nextFloat() * 360.0F, 0.0F);
+                level.addFreshEntity(vex);
+                level.sendParticles(
+                        ParticleTypes.SMOKE,
+                        vex.getX(), vex.getY() + 1.0, vex.getZ(),
+                        30, 0.5, 1.0, 0.5,
+                        0.05
+                );
             }
         }
 
-        // Sonido o partículas al invocarlos
         level.playSound(null, this.blockPosition(), SoundEvents.EVOKER_PREPARE_SUMMON, SoundSource.HOSTILE, 1.5F, 1.0F);
     }
 
