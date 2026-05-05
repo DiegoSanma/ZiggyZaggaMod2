@@ -338,6 +338,7 @@ public class AngelEntity extends Monster implements Enemy {
         private int motionTimeout;
         private int attackSpeed;
         private int wingCharge;
+        private Vec3 wingAttackTarget = null;
 
         public DualAngelAttackGoal(AngelEntity angel) {
             this.angel = angel;
@@ -406,21 +407,23 @@ public class AngelEntity extends Monster implements Enemy {
                 else if (wingCharge <= 0) {
                     angel.setAttackState(angel.random.nextInt(3, 5));
                     this.motionTimeout = 30;
-                    this.attackSpeed = 15;
+                    this.attackSpeed = 20;
                     wingCharge = 60; // 3 segundos
+                    this.wingAttackTarget = new Vec3(target.getX(), target.getY() + target.getBbHeight() * 0.5, target.getZ());
                 }
             }
         }
 
         public void WingAttack(LivingEntity target) {
             if (!(angel.level() instanceof ServerLevel serverLevel)) return;
+            if (this.wingAttackTarget == null) return;
 
             Vec3 angelCenter = angel.position().add(0, angel.getBbHeight() * 0.5, 0);
-            Vec3 targetCenter = target.position().add(0, target.getBbHeight() * 0.5, 0);
-            Vec3 direction = targetCenter.subtract(angelCenter).normalize();
-            double distance = angel.distanceTo(target);
+            Vec3 impactPos = this.wingAttackTarget;
+            Vec3 direction = impactPos.subtract(angelCenter).normalize();
+            double distance = angelCenter.distanceTo(impactPos);
 
-            // Trayectoria de viento desde el ángel hasta el jugador
+            // Trayectoria de viento desde el ángel hasta la posición de impacto fijada
             int steps = Math.max(4, (int)(distance * 2.5));
             Vec3 perp = new Vec3(-direction.z, 0, direction.x);
             for (int j = 0; j <= steps; j++) {
@@ -435,19 +438,21 @@ public class AngelEntity extends Monster implements Enemy {
                         px - perp.x * 0.6, py, pz - perp.z * 0.6, 1, 0.05, 0.1, 0.05, 0.01);
             }
 
-            // Explosión de partículas en el impacto
+            // Explosión de partículas en el punto de impacto (siempre visible)
             serverLevel.sendParticles(ParticleTypes.CLOUD,
-                    target.getX(), target.getY() + 1.0, target.getZ(), 15, 0.5, 0.5, 0.5, 0.06);
+                    impactPos.x, impactPos.y, impactPos.z, 20, 0.6, 0.6, 0.6, 0.06);
             serverLevel.sendParticles(ParticleTypes.POOF,
-                    target.getX(), target.getY() + 1.0, target.getZ(), 10, 0.4, 0.4, 0.4, 0.05);
+                    impactPos.x, impactPos.y, impactPos.z, 15, 0.5, 0.5, 0.5, 0.05);
 
-            // Daño escalado por distancia: 100% cerca, mínimo 40% a larga distancia
-            float baseDamage = (float) angel.getAttributeValue(Attributes.ATTACK_DAMAGE);
-            float distanceFactor = (float) Math.max(0.4, 1.0 - (distance / 15.0));
-            target.hurt(serverLevel.damageSources().mobAttack(angel), baseDamage * distanceFactor);
+            // Daño solo si el jugador sigue cerca del punto de impacto (radio 2.5 bloques)
+            double hitRadius = 3.5;
+            if (target.distanceToSqr(impactPos) <= hitRadius * hitRadius) {
+                float baseDamage = (float) angel.getAttributeValue(Attributes.ATTACK_DAMAGE);
+                target.hurt(serverLevel.damageSources().mobAttack(angel), baseDamage);
+                target.knockback(3.0, target.getX() - angel.getX(), target.getZ() - angel.getZ());
+            }
 
-            // Knockback en la dirección del ángel al jugador
-            target.knockback(1.2, target.getX() - angel.getX(), target.getZ() - angel.getZ());
+            this.wingAttackTarget = null;
         }
     }
 
