@@ -231,7 +231,6 @@ public class AngelEntity extends Monster implements Enemy {
     }
 
     public void onPhaseThreeStart() {
-        this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(15.0D);
         this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.06D);
         if (this.level() instanceof ServerLevel serverLevel) {
             double radius = 12.0D; // radio del aura
@@ -376,7 +375,7 @@ public class AngelEntity extends Monster implements Enemy {
                             angel.LightningAttack(target);
                         }
                         case 2 -> {
-                            angel.spawnMinionsAttack(getServerLevel(this.angel),1);
+                            angel.spawnMinionsAttack(getServerLevel(this.angel),4);
                         }
                         case 3, 4 -> {
                             this.WingAttack(target);
