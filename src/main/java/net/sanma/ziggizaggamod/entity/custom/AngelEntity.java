@@ -1,6 +1,5 @@
 package net.sanma.ziggizaggamod.entity.custom;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -12,7 +11,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.BossEvent;
 import net.minecraft.world.damagesource.DamageSource;
@@ -22,7 +20,6 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.FlyingMoveControl;
-import net.minecraft.world.entity.ai.control.MoveControl;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
@@ -30,19 +27,14 @@ import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomFlyingGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
-import net.minecraft.world.entity.boss.wither.WitherBoss;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.monster.Vex;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.sanma.ziggizaggamod.common.network.NeoForgePacketHandler;
-import net.sanma.ziggizaggamod.items.ModItems;
-import net.sanma.ziggizaggamod.sound.AngelBattleMusic;
 import net.sanma.ziggizaggamod.sound.ModSounds;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -166,50 +158,60 @@ public class AngelEntity extends Monster implements Enemy {
 
     @Override
     public void aiStep() {
-        // Movimiento base con ligera fricción vertical
-        Vec3 vec3 = this.getDeltaMovement().multiply(1.0F, 0.8F, 1.0F);
-        Entity entity = this.getTarget();
-        double d0 = vec3.y;
-        if (!this.level().isClientSide && entity != null) {
-            if (this.getY() < entity.getY() ||this.getY() < entity.getY() + (double)5.0F) {
-                d0 = Math.max((double)0.0F, d0);
-                d0 += 0. - d0 * (double)0.6F;
+        Vec3 vec3 = this.getDeltaMovement().multiply(0.91F, 0.85F, 0.91F);
+        Entity target = this.getTarget();
+
+        if (!this.level().isClientSide && target != null) {
+            double toTargetX = target.getX() - this.getX();
+            double toTargetZ = target.getZ() - this.getZ();
+            double horizDist = Math.sqrt(toTargetX * toTargetX + toTargetZ * toTargetZ);
+            // Modo orbital: círculo alrededor del jugador con radio y altura variables
+            double desiredRadius = 9.0 + Math.sin(this.tickCount * 0.015) * 2.0; // 7-11 bloques
+            double desiredHeight = 5.5 + Math.sin(this.tickCount * 0.02) * 1.5;  // 4-7 bloques sobre el jugador
+            double orbitAngle = this.tickCount * 0.03;
+
+            double desiredX = target.getX() + Math.cos(orbitAngle) * desiredRadius;
+            double desiredY = target.getY() + desiredHeight;
+            double desiredZ = target.getZ() + Math.sin(orbitAngle) * desiredRadius;
+            // Atracción proporcional hacia la posición orbital
+            double errX = desiredX - this.getX();
+            double errY = desiredY - this.getY();
+            double errZ = desiredZ - this.getZ();
+            double errLen = Math.sqrt(errX * errX + errY * errY + errZ * errZ);
+            if (errLen > 0.5) {
+                double attract = Math.min(errLen * 0.04, 0.25);
+                vec3 = vec3.add(errX / errLen * attract, errY / errLen * attract * 0.6, errZ / errLen * attract);
             }
-            vec3 = new Vec3(vec3.x, d0, vec3.z);
-            //Dos casos, lightning charge ya realizado y mientras carga
-            //Primero, me acerco bruscamente a el jugador
-            Vec3 vec31 = new Vec3(entity.getX() - this.getX(), (double) 0.0F, entity.getZ() - this.getZ());
-            if (vec31.horizontalDistanceSqr() > (double) 5.0F) {
-                Vec3 vec32 = vec31.normalize();
-                vec3 = vec3.add(vec32.x * 0.3 - vec3.x * 0.6, (double) 0.0F, vec32.z * 0.3 - vec3.z * 0.6);
+
+            // Huye si el jugador se acerca demasiado (< 5 bloques horizontales)
+            double minRadius = 5.0;
+            if (horizDist < minRadius && horizDist > 0.01) {
+                double fleePower = (minRadius - horizDist) / minRadius * 0.55;
+                vec3 = vec3.add(-toTargetX / horizDist * fleePower, 0.05, -toTargetZ / horizDist * fleePower);
             }
-            //Rodeo al jugador
-            if(!this.getAttackCooldown()){
-                double radius = 3.5 + this.getRandom().nextDouble() * 1.5; // 3.5-5 bloques
-                double angle = this.tickCount * 0.05; // girando suavemente alrededor
-                double offsetX = Math.cos(angle) * radius;
-                double offsetZ = Math.sin(angle) * radius;
-                vec3 = vec3.add(offsetX, 1.0D, offsetZ);
-                vec3 = vec3.scale(0.1D);
+
+            // Límites de velocidad para evitar movimiento errático
+            double hSpeed = vec3.horizontalDistance();
+            if (hSpeed > 0.55) {
+                vec3 = new Vec3(vec3.x / hSpeed * 0.55, vec3.y, vec3.z / hSpeed * 0.55);
+            }
+            if (Math.abs(vec3.y) > 0.4) {
+                vec3 = new Vec3(vec3.x, Math.copySign(0.4, vec3.y), vec3.z);
             }
         }
 
-        // Aplicar movimiento
         this.setDeltaMovement(vec3);
-        // Rotación del mob hacia la dirección del movimiento
         super.aiStep();
-        //Ahora reviso las fases del boss battle
+
         float healthRatio = this.getHealth() / this.getMaxHealth();
         this.bossEvent.setProgress(healthRatio);
         if (healthRatio <= 0.5f && !phase2) {
             phase2 = true;
             onPhaseTwoStart();
-        }
-        else if(healthRatio<=0.25f && !phase3) {
+        } else if (healthRatio <= 0.25f && !phase3) {
             phase3 = true;
             onPhaseThreeStart();
         }
-
     }
 
     public void onPhaseTwoStart() {
@@ -335,11 +337,13 @@ public class AngelEntity extends Monster implements Enemy {
         private int spawnCharge;
         private int motionTimeout;
         private int attackSpeed;
+        private int wingCharge;
 
         public DualAngelAttackGoal(AngelEntity angel) {
             this.angel = angel;
             this.lightingCharge = 0;
             this.spawnCharge = 0;
+            this.wingCharge = 0;
             this.motionTimeout = 0;
             this.attackSpeed = -1;
             this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
@@ -359,6 +363,7 @@ public class AngelEntity extends Monster implements Enemy {
             angel.getLookControl().setLookAt(target);
             lightingCharge--;
             spawnCharge--;
+            wingCharge--;
             if (lightingCharge == 20) {
                 angel.setAttackCooldown(false);
             }
@@ -389,7 +394,7 @@ public class AngelEntity extends Monster implements Enemy {
                     this.attackSpeed = 20;
                     spawnCharge = 300;
                 }
-                // Ataque a distancia si está lejos
+                // Ataque de rayo si está lejos
                 else if (distance > 36 && lightingCharge <= 0) {
                     angel.setAttackState(1);
                     angel.setAttackCooldown(true);
@@ -397,28 +402,52 @@ public class AngelEntity extends Monster implements Enemy {
                     this.attackSpeed = 20;
                     lightingCharge = 180; // 9 segundos
                 }
-                // Ataque cuerpo a cuerpo si está cerca
-                else if (distance <= 36 && angel.distanceTo(target) < angel.getBbWidth() + 2.0D) {
+                // Ataque de viento cuando orbita al jugador
+                else if (wingCharge <= 0) {
                     angel.setAttackState(angel.random.nextInt(3, 5));
                     this.motionTimeout = 30;
                     this.attackSpeed = 15;
+                    wingCharge = 60; // 3 segundos
                 }
             }
         }
 
         public void WingAttack(LivingEntity target) {
-            Vec3 direction = target.position().subtract(angel.position()).normalize();
-            direction = direction.scale(3.0);
-            if (angel.level() instanceof ServerLevel serverLevel) {
-                serverLevel.sendParticles(
-                        ParticleTypes.SWEEP_ATTACK,
-                        target.getX() - direction.x, target.getY() + 2 - direction.y, target.getZ() - direction.z,
-                        20,      // cantidad
-                        0.5, 0.5, 0.5, // offsets aproximando dirección
-                        0.0     // velocidad extra
-                );
+            if (!(angel.level() instanceof ServerLevel serverLevel)) return;
+
+            Vec3 angelCenter = angel.position().add(0, angel.getBbHeight() * 0.5, 0);
+            Vec3 targetCenter = target.position().add(0, target.getBbHeight() * 0.5, 0);
+            Vec3 direction = targetCenter.subtract(angelCenter).normalize();
+            double distance = angel.distanceTo(target);
+
+            // Trayectoria de viento desde el ángel hasta el jugador
+            int steps = Math.max(4, (int)(distance * 2.5));
+            Vec3 perp = new Vec3(-direction.z, 0, direction.x);
+            for (int j = 0; j <= steps; j++) {
+                double t = (double) j / steps;
+                double px = angelCenter.x + direction.x * distance * t;
+                double py = angelCenter.y + direction.y * distance * t;
+                double pz = angelCenter.z + direction.z * distance * t;
+                serverLevel.sendParticles(ParticleTypes.CLOUD, px, py, pz, 2, 0.1, 0.2, 0.1, 0.03);
+                serverLevel.sendParticles(ParticleTypes.POOF,
+                        px + perp.x * 0.6, py, pz + perp.z * 0.6, 1, 0.05, 0.1, 0.05, 0.01);
+                serverLevel.sendParticles(ParticleTypes.POOF,
+                        px - perp.x * 0.6, py, pz - perp.z * 0.6, 1, 0.05, 0.1, 0.05, 0.01);
             }
-            angel.doHurtTarget(getServerLevel(this.angel), target);
+
+            // Explosión de partículas en el impacto
+            serverLevel.sendParticles(ParticleTypes.CLOUD,
+                    target.getX(), target.getY() + 1.0, target.getZ(), 15, 0.5, 0.5, 0.5, 0.06);
+            serverLevel.sendParticles(ParticleTypes.POOF,
+                    target.getX(), target.getY() + 1.0, target.getZ(), 10, 0.4, 0.4, 0.4, 0.05);
+
+            // Daño escalado por distancia: 100% cerca, mínimo 40% a larga distancia
+            float baseDamage = (float) angel.getAttributeValue(Attributes.ATTACK_DAMAGE);
+            float distanceFactor = (float) Math.max(0.4, 1.0 - (distance / 15.0));
+            target.hurt(serverLevel.damageSources().mobAttack(angel), baseDamage * distanceFactor);
+
+            // Knockback en la dirección del ángel al jugador
+            target.knockback(1.2, target.getX() - angel.getX(), target.getZ() - angel.getZ());
         }
     }
 
