@@ -243,6 +243,20 @@ public class AngelEntity extends Monster implements Enemy {
         this.setDeltaMovement(vec3);
         super.aiStep();
 
+        // FlyingMoveControl writes yRot from movement direction inside super.aiStep(),
+        // then updateBodyRotation() copies it into yBodyRot — overriding faceTarget().
+        // Re-apply the correct facing after all vanilla processing is done.
+        if (!this.level().isClientSide) {
+            LivingEntity lTarget = this.getTarget();
+            if (lTarget != null) {
+                double dx = lTarget.getX() - this.getX();
+                double dz = lTarget.getZ() - this.getZ();
+                float faceAngle = (float)(Math.toDegrees(Math.atan2(dz, dx))) - 90.0F;
+                this.setYBodyRot(faceAngle);
+                this.setYHeadRot(faceAngle);
+            }
+        }
+
         float healthRatio = this.getHealth() / this.getMaxHealth();
         this.bossEvent.setProgress(healthRatio);
         if (healthRatio <= 0.5f && !phase2) {
