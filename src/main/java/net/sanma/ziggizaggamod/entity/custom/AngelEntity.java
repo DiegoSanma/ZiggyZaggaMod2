@@ -1,6 +1,5 @@
 package net.sanma.ziggizaggamod.entity.custom;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -12,7 +11,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.BossEvent;
 import net.minecraft.world.damagesource.DamageSource;
@@ -22,7 +20,6 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.FlyingMoveControl;
-import net.minecraft.world.entity.ai.control.MoveControl;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
@@ -30,27 +27,17 @@ import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomFlyingGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
-import net.minecraft.world.entity.animal.horse.Horse;
-import net.minecraft.world.entity.animal.horse.SkeletonHorse;
-import net.minecraft.world.entity.boss.wither.WitherBoss;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.monster.Monster;
-import net.minecraft.world.entity.monster.Zombie;
+import net.minecraft.world.entity.monster.Vex;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.sanma.ziggizaggamod.common.network.NeoForgePacketHandler;
-import net.sanma.ziggizaggamod.items.ModItems;
-import net.sanma.ziggizaggamod.sound.AngelBattleMusic;
 import net.sanma.ziggizaggamod.sound.ModSounds;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumSet;
 import java.util.List;
-import java.util.Optional;
-import java.util.Random;
 
 
 public class AngelEntity extends Monster implements Enemy {
@@ -64,6 +51,16 @@ public class AngelEntity extends Monster implements Enemy {
     private boolean phase2 = false;
     private boolean phase3 = false;
 
+    // Server-side cooldown timers, ticked down in aiStep()
+    int lightningCooldown = 0;
+    int spawnCooldown = 0;
+    int wingCooldown = 0;
+
+    // Erratic movement state
+    private int erraticTimer = 0;
+    private double erraticImpulseX = 0;
+    private double erraticImpulseZ = 0;
+
     private static final EntityDataAccessor<Integer> ATTACK_STATE =
             SynchedEntityData.defineId(AngelEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Boolean> ATTACK_COOLDOWN =
@@ -74,30 +71,30 @@ public class AngelEntity extends Monster implements Enemy {
 
     public AngelEntity(EntityType<? extends Monster> entityType, Level level) {
         super(entityType, level);
-        this.moveControl = new FlyingMoveControl(this,10,false);
+        this.moveControl = new FlyingMoveControl(this, 10, false);
         this.xpReward = 30000;
-
     }
 
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder p_326499_) {
         super.defineSynchedData(p_326499_);
-        p_326499_.define(ATTACK_STATE, 0); // 0 = sin ataque
-        p_326499_.define(ATTACK_COOLDOWN,false); // Cooldown de lightinng
+        p_326499_.define(ATTACK_STATE, 0);
+        p_326499_.define(ATTACK_COOLDOWN, false);
     }
-    public int getAttackState(){
+
+    public int getAttackState() {
         return this.entityData.get(ATTACK_STATE);
     }
 
-    public void setAttackState(int state){
+    public void setAttackState(int state) {
         this.entityData.set(ATTACK_STATE, state);
     }
 
-    public boolean getAttackCooldown(){
+    public boolean getAttackCooldown() {
         return this.entityData.get(ATTACK_COOLDOWN);
     }
 
-    public void setAttackCooldown(boolean cooldown){
+    public void setAttackCooldown(boolean cooldown) {
         this.entityData.set(ATTACK_COOLDOWN, cooldown);
     }
 
@@ -118,20 +115,20 @@ public class AngelEntity extends Monster implements Enemy {
 
     @Override
     protected void registerGoals() {
-        this.goalSelector.addGoal(0,new FloatGoal(this));
-        this.goalSelector.addGoal(2,new DualAngelAttackGoal(this));
-        this.goalSelector.addGoal(5, new WaterAvoidingRandomFlyingGoal(this,1.0));
-        this.goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 16.0F));
-
-        this.targetSelector.addGoal(1,new NearestAttackableTargetGoal<>(this, Player.class, true));
+        this.goalSelector.addGoal(0, new FloatGoal(this));
+        this.goalSelector.addGoal(2, new AngelSpawnMinionsGoal(this));
+        this.goalSelector.addGoal(3, new AngelLightningAttackGoal(this));
+        this.goalSelector.addGoal(4, new AngelWingAttackGoal(this));
+        this.goalSelector.addGoal(5, new AngelIdleGoal(this));
+        this.goalSelector.addGoal(6, new WaterAvoidingRandomFlyingGoal(this, 1.0));
+        this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, Player.class, 16.0F));
+        this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, Player.class, true));
     }
+
     private void setAnimationState() {
         int currentState = this.getAttackState();
-
-        // Solo cambiar animación si el estado realmente cambió
         if (currentState != lastAttackState) {
             lastAttackState = currentState;
-
             switch (currentState) {
                 case 0 -> idleAnimation.start(this.tickCount);
                 case 1 -> attack1Animation.start(this.tickCount);
@@ -148,11 +145,12 @@ public class AngelEntity extends Monster implements Enemy {
         flyingpathnavigation.setCanFloat(true);
         return flyingpathnavigation;
     }
+
     public static AttributeSupplier.Builder createAttributes() {
         return Monster.createMonsterAttributes()
                 .add(Attributes.MAX_HEALTH, 2000.0D)
                 .add(Attributes.ATTACK_DAMAGE, 10.0D)
-                .add(Attributes.ATTACK_KNOCKBACK,4.0D)
+                .add(Attributes.ATTACK_KNOCKBACK, 4.0D)
                 .add(Attributes.FLYING_SPEED, 0.25D)
                 .add(Attributes.MOVEMENT_SPEED, 0.01D)
                 .add(Attributes.FOLLOW_RANGE, 64.0D);
@@ -166,53 +164,108 @@ public class AngelEntity extends Monster implements Enemy {
         }
     }
 
+    // Sets head look and body yaw toward target each goal tick, overriding
+    // the movement-based body rotation that orbital movement would otherwise cause.
+    void faceTarget(LivingEntity target) {
+        this.getLookControl().setLookAt(target);
+        double dx = target.getX() - this.getX();
+        double dz = target.getZ() - this.getZ();
+        this.setYBodyRot((float)(Math.toDegrees(Math.atan2(dz, dx))) - 90.0F);
+    }
 
     @Override
     public void aiStep() {
-        // Movimiento base con ligera fricción vertical
-        Vec3 vec3 = this.getDeltaMovement().multiply(1.0F, 0.8F, 1.0F);
-        Entity entity = this.getTarget();
-        double d0 = vec3.y;
-        if (!this.level().isClientSide && entity != null) {
-            if (this.getY() < entity.getY() ||this.getY() < entity.getY() + (double)5.0F) {
-                d0 = Math.max((double)0.0F, d0);
-                d0 += 0. - d0 * (double)0.6F;
+        Vec3 vec3 = this.getDeltaMovement().multiply(0.91F, 0.85F, 0.91F);
+        Entity target = this.getTarget();
+
+        if (!this.level().isClientSide && target != null) {
+            double toTargetX = target.getX() - this.getX();
+            double toTargetZ = target.getZ() - this.getZ();
+            double horizDist = Math.sqrt(toTargetX * toTargetX + toTargetZ * toTargetZ);
+
+            // Two incommensurate sine waves on radius and a wobbling orbit angle make
+            // the path never a clean circle, while periodic random lurches add erratic bursts.
+            double desiredRadius = 22.0 + Math.sin(this.tickCount * 0.013) * 5.0
+                                        + Math.sin(this.tickCount * 0.031) * 3.0;
+            double desiredHeight = 9.0 + Math.sin(this.tickCount * 0.019) * 3.0
+                                       + Math.sin(this.tickCount * 0.011) * 2.0;
+            double orbitAngle = this.tickCount * 0.04 + Math.sin(this.tickCount * 0.007) * 3.0;
+
+            double desiredX = target.getX() + Math.cos(orbitAngle) * desiredRadius;
+            double desiredY = target.getY() + desiredHeight;
+            double desiredZ = target.getZ() + Math.sin(orbitAngle) * desiredRadius;
+
+            // Periodic random lurch: every 40-100 ticks pick a new impulse direction
+            erraticTimer--;
+            if (erraticTimer <= 0) {
+                erraticTimer = 40 + this.random.nextInt(60);
+                double lurchAngle = this.random.nextDouble() * Math.PI * 2;
+                erraticImpulseX = Math.cos(lurchAngle) * 0.35;
+                erraticImpulseZ = Math.sin(lurchAngle) * 0.35;
             }
-            vec3 = new Vec3(vec3.x, d0, vec3.z);
-            //Dos casos, lightning charge ya realizado y mientras carga
-            //Primero, me acerco bruscamente a el jugador
-            Vec3 vec31 = new Vec3(entity.getX() - this.getX(), (double) 0.0F, entity.getZ() - this.getZ());
-            if (vec31.horizontalDistanceSqr() > (double) 5.0F) {
-                Vec3 vec32 = vec31.normalize();
-                vec3 = vec3.add(vec32.x * 0.3 - vec3.x * 0.6, (double) 0.0F, vec32.z * 0.3 - vec3.z * 0.6);
+            erraticImpulseX *= 0.92;
+            erraticImpulseZ *= 0.92;
+
+            double errX = desiredX - this.getX();
+            double errY = desiredY - this.getY();
+            double errZ = desiredZ - this.getZ();
+            double errLen = Math.sqrt(errX * errX + errY * errY + errZ * errZ);
+            if (errLen > 0.5) {
+                double attract = Math.min(errLen * 0.04, 0.25);
+                vec3 = vec3.add(errX / errLen * attract + erraticImpulseX,
+                                errY / errLen * attract * 0.6,
+                                errZ / errLen * attract + erraticImpulseZ);
             }
-            //Rodeo al jugador
-            if(!this.getAttackCooldown()){
-                double radius = 3.5 + this.getRandom().nextDouble() * 1.5; // 3.5-5 bloques
-                double angle = this.tickCount * 0.05; // girando suavemente alrededor
-                double offsetX = Math.cos(angle) * radius;
-                double offsetZ = Math.sin(angle) * radius;
-                vec3 = vec3.add(offsetX, 1.0D, offsetZ);
-                vec3 = vec3.scale(0.1D);
+
+            double minRadius = 14.0;
+            if (horizDist < minRadius && horizDist > 0.01) {
+                double fleePower = (minRadius - horizDist) / minRadius * 0.55;
+                vec3 = vec3.add(-toTargetX / horizDist * fleePower, 0.05, -toTargetZ / horizDist * fleePower);
+            }
+
+            double hSpeed = vec3.horizontalDistance();
+            if (hSpeed > 0.65) {
+                vec3 = new Vec3(vec3.x / hSpeed * 0.65, vec3.y, vec3.z / hSpeed * 0.65);
+            }
+            if (Math.abs(vec3.y) > 0.5) {
+                vec3 = new Vec3(vec3.x, Math.copySign(0.5, vec3.y), vec3.z);
+            }
+
+            // Tick down cooldown timers; clear the lightning cooldown indicator at 20 ticks remaining
+            if (lightningCooldown > 0) {
+                lightningCooldown--;
+                if (lightningCooldown == 20) setAttackCooldown(false);
+            }
+            if (spawnCooldown > 0) spawnCooldown--;
+            if (wingCooldown > 0) wingCooldown--;
+        }
+
+        this.setDeltaMovement(vec3);
+        super.aiStep();
+
+        // FlyingMoveControl writes yRot from movement direction inside super.aiStep(),
+        // then updateBodyRotation() copies it into yBodyRot — overriding faceTarget().
+        // Re-apply the correct facing after all vanilla processing is done.
+        if (!this.level().isClientSide) {
+            LivingEntity lTarget = this.getTarget();
+            if (lTarget != null) {
+                double dx = lTarget.getX() - this.getX();
+                double dz = lTarget.getZ() - this.getZ();
+                float faceAngle = (float)(Math.toDegrees(Math.atan2(dz, dx))) - 90.0F;
+                this.setYBodyRot(faceAngle);
+                this.setYHeadRot(faceAngle);
             }
         }
 
-        // Aplicar movimiento
-        this.setDeltaMovement(vec3);
-        // Rotación del mob hacia la dirección del movimiento
-        super.aiStep();
-        //Ahora reviso las fases del boss battle
         float healthRatio = this.getHealth() / this.getMaxHealth();
         this.bossEvent.setProgress(healthRatio);
         if (healthRatio <= 0.5f && !phase2) {
             phase2 = true;
             onPhaseTwoStart();
-        }
-        else if(healthRatio<=0.25f && !phase3) {
+        } else if (healthRatio <= 0.25f && !phase3) {
             phase3 = true;
             onPhaseThreeStart();
         }
-
     }
 
     public void onPhaseTwoStart() {
@@ -221,39 +274,33 @@ public class AngelEntity extends Monster implements Enemy {
             for (int i = 0; i < 5; i++) {
                 double offsetX = (this.random.nextDouble() - 0.5) * 8;
                 double offsetZ = (this.random.nextDouble() - 0.5) * 8;
-                LightningBolt bolt = EntityType.LIGHTNING_BOLT.create(serverLevel,EntitySpawnReason.TRIGGERED);
+                LightningBolt bolt = EntityType.LIGHTNING_BOLT.create(serverLevel, EntitySpawnReason.TRIGGERED);
                 if (bolt != null) {
                     bolt.moveTo(this.getX() + offsetX, this.getY(), this.getZ() + offsetZ);
                     serverLevel.addFreshEntity(bolt);
                 }
             }
-            serverLevel.playSound(null,this.blockPosition(),ModSounds.PHASEONE.get(),SoundSource.HOSTILE);
+            serverLevel.playSound(null, this.blockPosition(), ModSounds.PHASEONE.get(), SoundSource.HOSTILE);
         }
     }
 
     public void onPhaseThreeStart() {
-        this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(15.0D);
         this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.06D);
         if (this.level() instanceof ServerLevel serverLevel) {
-            double radius = 12.0D; // radio del aura
+            double radius = 12.0D;
             List<Player> nearbyPlayers = serverLevel.getEntitiesOfClass(Player.class,
                     this.getBoundingBox().inflate(radius));
-
             for (Player player : nearbyPlayers) {
-                double dist = this.distanceTo(player);
-                if (dist <= radius) {
-                    // Aplica una mezcla de efectos
-                    player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 100, 1)); // lentitud 5 seg
-                    player.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 60, 0));           // ceguera 3 seg
-
-                    // Partículas visuales sobre el jugador
+                if (this.distanceTo(player) <= radius) {
+                    player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 100, 1));
+                    player.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 60, 0));
                     serverLevel.sendParticles(ParticleTypes.SMOKE,
                             player.getX(), player.getY() + 1.0, player.getZ(),
                             20, 0.3, 0.3, 0.3, 0.01);
                 }
             }
-            serverLevel.playSound(null,this.blockPosition(),ModSounds.PHASETWO.get(),SoundSource.HOSTILE);
-            spawnMinionsAttack(serverLevel,5);
+            serverLevel.playSound(null, this.blockPosition(), ModSounds.PHASETWO.get(), SoundSource.HOSTILE);
+            spawnMinionsAttack(serverLevel, 6);
         }
     }
 
@@ -269,109 +316,58 @@ public class AngelEntity extends Monster implements Enemy {
                 this.getX(), this.getY(), this.getZ(),
                 this.getHurtSound(source),
                 this.getSoundSource(),
-                0.3F, // 🔊 volumen personalizado (más bajo que 1.0F)
-                1.0F  // tono
+                0.3F,
+                1.0F
         );
     }
 
     public void LightningAttack(LivingEntity target) {
-        if (target == null || level().isClientSide()) return; // solo en servidor
-
+        if (target == null || level().isClientSide()) return;
         ServerLevel serverLevel = (ServerLevel) level();
         RandomSource random = level().getRandom();
-
         for (int i = 0; i < 5; i++) {
-            LightningBolt lightning = EntityType.LIGHTNING_BOLT.create(this.level(),EntitySpawnReason.TRIGGERED);
+            LightningBolt lightning = EntityType.LIGHTNING_BOLT.create(this.level(), EntitySpawnReason.TRIGGERED);
             if (lightning != null) {
-                // Posición del target con pequeño desplazamiento aleatorio
-                double offsetX = (random.nextDouble() - 0.5) * 1.0; // ±0.5 bloques X
-                double offsetZ = (random.nextDouble() - 0.5) * 1.0; // ±0.5 bloques Z
+                double offsetX = (random.nextDouble() - 0.5) * 1.0;
+                double offsetZ = (random.nextDouble() - 0.5) * 1.0;
                 Vec3 pos = target.position().add(offsetX, 0, offsetZ);
-
                 lightning.moveTo(pos.x, pos.y, pos.z);
                 serverLevel.addFreshEntity(lightning);
-                // Efecto de daño adicional o sonido opcional
-                target.level().playSound(
-                        null,
-                        target.blockPosition(),
-                        SoundEvents.LIGHTNING_BOLT_THUNDER,
-                        SoundSource.WEATHER,
-                        2.0F,
-                        1.0F
-                );
+                target.level().playSound(null, target.blockPosition(),
+                        SoundEvents.LIGHTNING_BOLT_THUNDER, SoundSource.WEATHER, 2.0F, 1.0F);
             }
         }
-
     }
 
-    private void spawnMinionsAttack(ServerLevel level,int numBackups) {
-
+    private void spawnMinionsAttack(ServerLevel level, int numBackups) {
         for (int i = 0; i < numBackups; i++) {
             double angle = Math.toRadians(level.random.nextInt(360));
             double radius = 6.0D + level.random.nextDouble() * 2.0D;
-            double xOffset = Math.cos(angle) * radius;
-            double zOffset = Math.sin(angle) * radius;
-
-            double spawnX = this.getX() + xOffset;
+            double spawnX = this.getX() + Math.cos(angle) * radius;
             double spawnY = this.getY();
-            double spawnZ = this.getZ() + zOffset;
-
-            // Crear el caballo
-            SkeletonHorse horse = EntityType.SKELETON_HORSE.create(level,EntitySpawnReason.TRIGGERED);
-            if (horse != null) {
-                horse.moveTo(spawnX, spawnY, spawnZ, level.random.nextFloat() * 360.0F, 0.0F);
-                horse.setTamed(true);
-                horse.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.35D);
-                horse.getAttribute(Attributes.MAX_HEALTH).setBaseValue(30.0D);
-                horse.setHealth(30.0F);
-
-                // Crear el zombie
-                Zombie rider = EntityType.ZOMBIE.create(level,EntitySpawnReason.TRIGGERED);
-                if (rider != null) {
-                    rider.moveTo(spawnX, spawnY + 1.0D, spawnZ, level.random.nextFloat() * 360.0F, 0.0F);
-                    rider.setCustomName(Component.literal("Angel's Warrior"));
-                    rider.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 1200, 1));
-
-                    // Equipar algo si quieres
-                    rider.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(ModItems.ZIGGIZITE_SWORD.get()));
-                    rider.setItemSlot(EquipmentSlot.HEAD, new ItemStack(Items.IRON_HELMET));
-
-                    // Añadir al mundo
-                    level.addFreshEntity(horse);
-                    level.addFreshEntity(rider);
-
-                    // Montar al zombie sobre el caballo
-                    rider.startRiding(horse, true);
-                    level.sendParticles(
-                            ParticleTypes.SMOKE,
-                            rider.getX(), rider.getY() + 1.0, rider.getZ(), // posición
-                            30, 0.5, 1.0, 0.5, // cantidad, offset X/Y/Z
-                            0.05 // velocidad de las partículas
-                    );
-                }
-
+            double spawnZ = this.getZ() + Math.sin(angle) * radius;
+            Vex vex = EntityType.VEX.create(level, EntitySpawnReason.TRIGGERED);
+            if (vex != null) {
+                vex.moveTo(spawnX, spawnY, spawnZ, level.random.nextFloat() * 360.0F, 0.0F);
+                level.addFreshEntity(vex);
+                level.sendParticles(ParticleTypes.SMOKE,
+                        vex.getX(), vex.getY() + 1.0, vex.getZ(), 30, 0.5, 1.0, 0.5, 0.05);
             }
         }
-
-        // Sonido o partículas al invocarlos
         level.playSound(null, this.blockPosition(), SoundEvents.EVOKER_PREPARE_SUMMON, SoundSource.HOSTILE, 1.5F, 1.0F);
     }
 
+    /* ------------------------------------------------------------------ */
+    /*  GOALS                                                               */
+    /* ------------------------------------------------------------------ */
 
-    public class DualAngelAttackGoal extends Goal {
+    // Runs between attacks: faces the player and holds attackState = 0
+    public class AngelIdleGoal extends Goal {
         private final AngelEntity angel;
-        private int lightingCharge;
-        private int spawnCharge;
-        private int motionTimeout;
-        private int attackSpeed;
 
-        public DualAngelAttackGoal(AngelEntity angel) {
+        public AngelIdleGoal(AngelEntity angel) {
             this.angel = angel;
-            this.lightingCharge = 0;
-            this.spawnCharge = 0;
-            this.motionTimeout = 0;
-            this.attackSpeed = -1;
-            this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
+            this.setFlags(EnumSet.of(Goal.Flag.LOOK));
         }
 
         @Override
@@ -384,86 +380,222 @@ public class AngelEntity extends Monster implements Enemy {
         public void tick() {
             LivingEntity target = angel.getTarget();
             if (target == null) return;
-
-            angel.getLookControl().setLookAt(target);
-            lightingCharge--;
-            spawnCharge--;
-            if (lightingCharge == 20) {
-                angel.setAttackCooldown(false);
-            }
-            if (this.motionTimeout > 0) {
-                this.motionTimeout--;
-                if (motionTimeout == this.attackSpeed) {
-                    switch (angel.getAttackState()) {
-                        case 1 -> {
-                            angel.LightningAttack(target);
-                        }
-                        case 2 -> {
-                            angel.spawnMinionsAttack(getServerLevel(this.angel),1);
-                        }
-                        case 3, 4 -> {
-                            this.WingAttack(target);
-                        }
-                    }
-                }
-                if (this.motionTimeout == 0) {
-                    angel.setAttackState(0);
-                }
-            } else {
-                double distance = angel.distanceToSqr(target);
-                if(spawnCharge<=0){
-                    angel.setAttackState(2);
-                    angel.setAttackCooldown(true);
-                    this.motionTimeout = 40;
-                    this.attackSpeed = 20;
-                    spawnCharge = 300;
-                }
-                // Ataque a distancia si está lejos
-                else if (distance > 36 && lightingCharge <= 0) {
-                    angel.setAttackState(1);
-                    angel.setAttackCooldown(true);
-                    this.motionTimeout = 40;
-                    this.attackSpeed = 20;
-                    lightingCharge = 180; // 9 segundos
-                }
-                // Ataque cuerpo a cuerpo si está cerca
-                else if (distance <= 36 && angel.distanceTo(target) < angel.getBbWidth() + 2.0D) {
-                    angel.setAttackState(angel.random.nextInt(3, 5));
-                    this.motionTimeout = 30;
-                    this.attackSpeed = 15;
-                }
-            }
-        }
-
-        public void WingAttack(LivingEntity target) {
-            Vec3 direction = target.position().subtract(angel.position()).normalize();
-            direction = direction.scale(3.0);
-            if (angel.level() instanceof ServerLevel serverLevel) {
-                serverLevel.sendParticles(
-                        ParticleTypes.SWEEP_ATTACK,
-                        target.getX() - direction.x, target.getY() + 2 - direction.y, target.getZ() - direction.z,
-                        20,      // cantidad
-                        0.5, 0.5, 0.5, // offsets aproximando dirección
-                        0.0     // velocidad extra
-                );
-            }
-            angel.doHurtTarget(getServerLevel(this.angel), target);
+            angel.setAttackState(0);
+            angel.faceTarget(target);
         }
     }
 
-    /* BOSS BAR */
+    // Summons vexes — highest attack priority, long cooldown
+    public class AngelSpawnMinionsGoal extends Goal {
+        private final AngelEntity angel;
+        private int motionTimeout = 0;
+        private static final int DURATION = 40;
+        private static final int HIT_TICK = 20;
+        private static final int COOLDOWN = 300;
+        private static final int BACKUPS = 4;
+
+        public AngelSpawnMinionsGoal(AngelEntity angel) {
+            this.angel = angel;
+            this.setFlags(EnumSet.of(Goal.Flag.LOOK));
+        }
+
+        @Override
+        public boolean canUse() {
+            LivingEntity target = angel.getTarget();
+            return target != null && target.isAlive() && angel.spawnCooldown <= 0;
+        }
+
+        @Override
+        public boolean canContinueToUse() {
+            return motionTimeout > 0;
+        }
+
+        @Override
+        public void start() {
+            angel.setAttackState(2);
+            angel.setAttackCooldown(true);
+            motionTimeout = DURATION;
+            angel.spawnCooldown = COOLDOWN;
+        }
+
+        @Override
+        public void tick() {
+            LivingEntity target = angel.getTarget();
+            if (target != null) angel.faceTarget(target);
+            motionTimeout--;
+            if (motionTimeout == HIT_TICK) {
+                if (angel.level() instanceof ServerLevel serverLevel) {
+                    angel.spawnMinionsAttack(serverLevel, BACKUPS);
+                }
+            }
+        }
+
+        @Override
+        public void stop() {
+            angel.setAttackState(0);
+            motionTimeout = 0;
+        }
+    }
+
+    // Calls lightning when the player is far away
+    public class AngelLightningAttackGoal extends Goal {
+        private final AngelEntity angel;
+        private int motionTimeout = 0;
+        private static final int DURATION = 40;
+        private static final int HIT_TICK = 20;
+        private static final int COOLDOWN = 180;
+
+        public AngelLightningAttackGoal(AngelEntity angel) {
+            this.angel = angel;
+            this.setFlags(EnumSet.of(Goal.Flag.LOOK));
+        }
+
+        @Override
+        public boolean canUse() {
+            LivingEntity target = angel.getTarget();
+            return target != null && target.isAlive()
+                    && angel.distanceToSqr(target) > 100
+                    && angel.lightningCooldown <= 0;
+        }
+
+        @Override
+        public boolean canContinueToUse() {
+            return motionTimeout > 0;
+        }
+
+        @Override
+        public void start() {
+            angel.setAttackState(1);
+            angel.setAttackCooldown(true);
+            motionTimeout = DURATION;
+            angel.lightningCooldown = COOLDOWN;
+        }
+
+        @Override
+        public void tick() {
+            LivingEntity target = angel.getTarget();
+            if (target != null) angel.faceTarget(target);
+            motionTimeout--;
+            if (motionTimeout == HIT_TICK) {
+                LivingEntity t = angel.getTarget();
+                if (t != null) angel.LightningAttack(t);
+            }
+        }
+
+        @Override
+        public void stop() {
+            angel.setAttackState(0);
+            motionTimeout = 0;
+        }
+    }
+
+    // Fires a wing-blast while orbiting at close range
+    public class AngelWingAttackGoal extends Goal {
+        private final AngelEntity angel;
+        private int motionTimeout = 0;
+        private Vec3 wingAttackTarget = null;
+        private static final int DURATION = 30;
+        private static final int HIT_TICK = 20;
+        private static final int COOLDOWN = 60;
+
+        public AngelWingAttackGoal(AngelEntity angel) {
+            this.angel = angel;
+            this.setFlags(EnumSet.of(Goal.Flag.LOOK));
+        }
+
+        @Override
+        public boolean canUse() {
+            LivingEntity target = angel.getTarget();
+            return target != null && target.isAlive() && angel.wingCooldown <= 0;
+        }
+
+        @Override
+        public boolean canContinueToUse() {
+            return motionTimeout > 0;
+        }
+
+        @Override
+        public void start() {
+            LivingEntity target = angel.getTarget();
+            if (target == null) return;
+            angel.setAttackState(angel.random.nextInt(3, 5));
+            motionTimeout = DURATION;
+            angel.wingCooldown = COOLDOWN;
+            wingAttackTarget = new Vec3(target.getX(), target.getY() + target.getBbHeight() * 0.5, target.getZ());
+        }
+
+        @Override
+        public void tick() {
+            LivingEntity target = angel.getTarget();
+            if (target != null) angel.faceTarget(target);
+            motionTimeout--;
+            if (motionTimeout == HIT_TICK) {
+                LivingEntity t = angel.getTarget();
+                if (t != null) doWingAttack(t);
+            }
+        }
+
+        @Override
+        public void stop() {
+            angel.setAttackState(0);
+            motionTimeout = 0;
+            wingAttackTarget = null;
+        }
+
+        private void doWingAttack(LivingEntity target) {
+            if (!(angel.level() instanceof ServerLevel serverLevel)) return;
+            if (wingAttackTarget == null) return;
+
+            Vec3 angelCenter = angel.position().add(0, angel.getBbHeight() * 0.5, 0);
+            Vec3 impactPos = wingAttackTarget;
+            Vec3 direction = impactPos.subtract(angelCenter).normalize();
+            double distance = angelCenter.distanceTo(impactPos);
+
+            int steps = Math.max(4, (int)(distance * 2.5));
+            Vec3 perp = new Vec3(-direction.z, 0, direction.x);
+            for (int j = 0; j <= steps; j++) {
+                double t = (double) j / steps;
+                double px = angelCenter.x + direction.x * distance * t;
+                double py = angelCenter.y + direction.y * distance * t;
+                double pz = angelCenter.z + direction.z * distance * t;
+                serverLevel.sendParticles(ParticleTypes.CLOUD, px, py, pz, 2, 0.1, 0.2, 0.1, 0.03);
+                serverLevel.sendParticles(ParticleTypes.POOF,
+                        px + perp.x * 0.6, py, pz + perp.z * 0.6, 1, 0.05, 0.1, 0.05, 0.01);
+                serverLevel.sendParticles(ParticleTypes.POOF,
+                        px - perp.x * 0.6, py, pz - perp.z * 0.6, 1, 0.05, 0.1, 0.05, 0.01);
+            }
+
+            serverLevel.sendParticles(ParticleTypes.CLOUD,
+                    impactPos.x, impactPos.y, impactPos.z, 20, 0.6, 0.6, 0.6, 0.06);
+            serverLevel.sendParticles(ParticleTypes.POOF,
+                    impactPos.x, impactPos.y, impactPos.z, 15, 0.5, 0.5, 0.5, 0.05);
+
+            double hitRadius = 3.5;
+            if (target.distanceToSqr(impactPos) <= hitRadius * hitRadius) {
+                float baseDamage = (float) angel.getAttributeValue(Attributes.ATTACK_DAMAGE);
+                target.hurt(serverLevel.damageSources().mobAttack(angel), baseDamage);
+                target.knockback(3.0, target.getX() - angel.getX(), target.getZ() - angel.getZ());
+            }
+
+            wingAttackTarget = null;
+        }
+    }
+
+    /* ------------------------------------------------------------------ */
+    /*  BOSS BAR                                                            */
+    /* ------------------------------------------------------------------ */
+
     @Override
     public void startSeenByPlayer(ServerPlayer serverPlayer) {
         super.startSeenByPlayer(serverPlayer);
         this.bossEvent.addPlayer(serverPlayer);
-        NeoForgePacketHandler.sendBattleMusicToPlayer(serverPlayer,this.getId());
+        NeoForgePacketHandler.sendBattleMusicToPlayer(serverPlayer, this.getId());
     }
 
     @Override
     public void stopSeenByPlayer(ServerPlayer serverPlayer) {
         super.stopSeenByPlayer(serverPlayer);
         this.bossEvent.removePlayer(serverPlayer);
-        NeoForgePacketHandler.sendBattleMusicToPlayer(serverPlayer,this.getId());
+        NeoForgePacketHandler.sendBattleMusicToPlayer(serverPlayer, this.getId());
     }
-
 }
